@@ -1,0 +1,143 @@
+version: 2
+
+sources:
+  - name: Carto
+    config:
+      y42_source:
+        type: source-postgres
+        connection: carto
+      y42:
+        apiVersion: v2
+    meta:
+      experts:
+        users:
+          - anton@connext.network
+    tables:
+      - name: public_routers_with_balances
+        config:
+          y42_table:
+            import: routers_with_balances
+            columns:
+              - router_address
+              - adopted_decimal
+              - address
+              - supplied
+              - asset_domain
+              - balance_usd
+              - canonical_domain
+              - local
+              - locked_usd
+              - fee_earned_usd
+              - asset_usd_price
+              - balance
+              - removed
+              - domain
+              - canonical_id
+              - removed_usd
+              - id
+              - asset_canonical_id
+              - fees_earned
+              - locked
+              - decimal
+              - supplied_usd
+              - adopted
+              - key
+            group: public
+            supported_sync_modes:
+              - full_refresh
+              - incremental
+            default_cursor_field: []
+            source_defined_primary_key: []
+      - name: public_router_tvl
+        config:
+          y42_table:
+            import: router_tvl
+            columns:
+              - price
+              - tvl
+              - asset
+              - tvl_usd
+              - latest_transfer_day
+            group: public
+            supported_sync_modes:
+              - full_refresh
+              - incremental
+            default_cursor_field: []
+            source_defined_primary_key: []
+      - name: public_routers
+        config:
+          y42_table:
+            import: routers
+            columns:
+              - address
+            group: public
+            supported_sync_modes:
+              - full_refresh
+            default_cursor_field: []
+            source_defined_primary_key:
+              - - address
+      - name: public_router_liquidity
+        config:
+          y42_table:
+            import: router_liquidity
+            columns:
+              - total_balance
+              - total_removed_usd
+              - total_balance_usd
+              - total_locked_usd
+              - avg_usd_price
+              - domain
+              - total_locked
+              - total_supplied_usd
+              - total_removed
+              - total_supplied
+              - local
+              - adopted
+            group: public
+            supported_sync_modes:
+              - full_refresh
+              - incremental
+            default_cursor_field: []
+            source_defined_primary_key: []
+      - name: public_daily_router_tvl
+        config:
+          y42_table:
+            import: daily_router_tvl
+            columns:
+              - router
+              - balance
+              - domain
+              - id
+              - asset
+              - day
+            group: public
+            supported_sync_modes:
+              - full_refresh
+              - incremental
+            default_cursor_field: []
+            source_defined_primary_key:
+              - - id
+      - name: public_router_liquidity_events
+        config:
+          y42_table:
+            import: router_liquidity_events
+            columns:
+              - router
+              - amount
+              - balance
+              - domain
+              - block_number
+              - id
+              - event
+              - asset
+              - nonce
+              - transaction_hash
+              - timestamp
+            group: public
+            supported_sync_modes:
+              - full_refresh
+              - incremental
+            default_cursor_field:
+              - id
+            source_defined_primary_key:
+              - - id
