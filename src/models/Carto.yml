@@ -719,6 +719,6 @@ sources:
               - full_refresh
               - incremental
             default_cursor_field:
-              - transfer_id
+              - message_hash
             source_defined_primary_key:
               - - transfer_id
