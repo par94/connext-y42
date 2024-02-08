@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: Cartographer
+    config:
+      y42_source:
+        type: source-postgres
+        connection: carto-read
+      y42:
+        apiVersion: v2
+    meta:
+      experts:
+        users:
+          - anton@connext.network

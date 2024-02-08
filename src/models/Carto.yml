@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: Carto
+  - name: Carto-depr
     config:
       y42_source:
         type: source-postgres
