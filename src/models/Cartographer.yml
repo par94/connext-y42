@@ -5,7 +5,7 @@ sources:
     config:
       y42_source:
         type: source-postgres
-        connection: carto-read
+        connection: cartographer_read
       y42:
         apiVersion: v2
     meta:
