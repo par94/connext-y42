@@ -49,7 +49,8 @@ sources:
             supported_sync_modes:
               - full_refresh
               - incremental
-            default_cursor_field: []
+            default_cursor_field:
+              - id
             source_defined_primary_key:
               - - id
       - name: public_assets
@@ -89,7 +90,8 @@ sources:
             supported_sync_modes:
               - full_refresh
               - incremental
-            default_cursor_field: []
+            default_cursor_field:
+              - id
             source_defined_primary_key:
               - - id
       - name: public_daily_transfer_volume
@@ -111,7 +113,8 @@ sources:
             supported_sync_modes:
               - full_refresh
               - incremental
-            default_cursor_field: []
+            default_cursor_field:
+              - id
             source_defined_primary_key: []
       - name: public_router_liquidity
         config:
@@ -156,7 +159,8 @@ sources:
             supported_sync_modes:
               - full_refresh
               - incremental
-            default_cursor_field: []
+            default_cursor_field:
+              - id
             source_defined_primary_key:
               - - id
       - name: public_router_tvl
@@ -245,7 +249,8 @@ sources:
             supported_sync_modes:
               - full_refresh
               - incremental
-            default_cursor_field: []
+            default_cursor_field:
+              - id
             source_defined_primary_key:
               - - domain
               - - id
@@ -291,7 +296,8 @@ sources:
             supported_sync_modes:
               - full_refresh
               - incremental
-            default_cursor_field: []
+            default_cursor_field:
+              - id
             source_defined_primary_key:
               - - id
       - name: public_stableswap_pool_events
@@ -319,7 +325,8 @@ sources:
             supported_sync_modes:
               - full_refresh
               - incremental
-            default_cursor_field: []
+            default_cursor_field:
+              - id
             source_defined_primary_key:
               - - id
       - name: public_stableswap_pools
