@@ -53,6 +53,17 @@ sources:
               - id
             source_defined_primary_key:
               - - id
+        columns:
+          - name: canonical_domain
+            data_type: STRING
+          - name: canonical_id
+            data_type: STRING
+          - name: id
+            data_type: INTEGER
+          - name: price
+            data_type: FLOAT
+          - name: timestamp
+            data_type: INTEGER
       - name: public_assets
         config:
           y42_table:
@@ -94,6 +105,19 @@ sources:
               - id
             source_defined_primary_key:
               - - id
+        columns:
+          - name: asset
+            data_type: STRING
+          - name: balance
+            data_type: STRING
+          - name: day
+            data_type: DATE
+          - name: domain
+            data_type: STRING
+          - name: id
+            data_type: STRING
+          - name: router
+            data_type: STRING
       - name: public_daily_transfer_volume
         config:
           y42_table:
@@ -116,6 +140,27 @@ sources:
             default_cursor_field:
               - id
             source_defined_primary_key: []
+        columns:
+          - name: asset
+            data_type: STRING
+          - name: avg_price
+            data_type: FLOAT
+          - name: destination_chain
+            data_type: STRING
+          - name: id
+            data_type: INTEGER
+          - name: origin_chain
+            data_type: STRING
+          - name: router
+            data_type: STRING
+          - name: status
+            data_type: STRING
+          - name: transfer_date
+            data_type: DATE
+          - name: usd_volume
+            data_type: FLOAT
+          - name: volume
+            data_type: FLOAT
       - name: public_router_liquidity
         config:
           y42_table:
@@ -163,6 +208,29 @@ sources:
               - id
             source_defined_primary_key:
               - - id
+        columns:
+          - name: amount
+            data_type: FLOAT
+          - name: asset
+            data_type: STRING
+          - name: balance
+            data_type: FLOAT
+          - name: block_number
+            data_type: INTEGER
+          - name: domain
+            data_type: STRING
+          - name: event
+            data_type: STRING
+          - name: id
+            data_type: STRING
+          - name: nonce
+            data_type: FLOAT
+          - name: router
+            data_type: STRING
+          - name: timestamp
+            data_type: INTEGER
+          - name: transaction_hash
+            data_type: STRING
       - name: public_router_tvl
         config:
           y42_table:
@@ -254,6 +322,35 @@ sources:
             source_defined_primary_key:
               - - domain
               - - id
+        columns:
+          - name: balances
+            data_type: STRING
+          - name: block_number
+            data_type: INTEGER
+          - name: bought_id
+            data_type: INTEGER
+          - name: buyer
+            data_type: STRING
+          - name: domain
+            data_type: STRING
+          - name: fee
+            data_type: FLOAT
+          - name: id
+            data_type: STRING
+          - name: nonce
+            data_type: FLOAT
+          - name: pool_id
+            data_type: STRING
+          - name: sold_id
+            data_type: INTEGER
+          - name: timestamp
+            data_type: INTEGER
+          - name: tokens_bought
+            data_type: FLOAT
+          - name: tokens_sold
+            data_type: FLOAT
+          - name: transaction_hash
+            data_type: STRING
       - name: public_stableswap_lp_balances
         config:
           y42_table:
@@ -300,6 +397,33 @@ sources:
               - id
             source_defined_primary_key:
               - - id
+        columns:
+          - name: amount
+            data_type: FLOAT
+          - name: balances
+            data_type: STRING
+          - name: block_number
+            data_type: INTEGER
+          - name: domain
+            data_type: STRING
+          - name: from_address
+            data_type: STRING
+          - name: id
+            data_type: STRING
+          - name: lp_token
+            data_type: STRING
+          - name: nonce
+            data_type: FLOAT
+          - name: pool_id
+            data_type: STRING
+          - name: pooled_tokens
+            data_type: STRING
+          - name: timestamp
+            data_type: INTEGER
+          - name: to_address
+            data_type: STRING
+          - name: transaction_hash
+            data_type: STRING
       - name: public_stableswap_pool_events
         config:
           y42_table:
@@ -329,6 +453,39 @@ sources:
               - id
             source_defined_primary_key:
               - - id
+        columns:
+          - name: action
+            data_type: STRING
+          - name: balances
+            data_type: STRING
+          - name: block_number
+            data_type: INTEGER
+          - name: domain
+            data_type: STRING
+          - name: fees
+            data_type: STRING
+          - name: id
+            data_type: STRING
+          - name: lp_token_amount
+            data_type: FLOAT
+          - name: lp_token_supply
+            data_type: FLOAT
+          - name: nonce
+            data_type: FLOAT
+          - name: pool_id
+            data_type: STRING
+          - name: pool_token_decimals
+            data_type: STRING
+          - name: pooled_tokens
+            data_type: STRING
+          - name: provider
+            data_type: STRING
+          - name: timestamp
+            data_type: INTEGER
+          - name: token_amounts
+            data_type: STRING
+          - name: transaction_hash
+            data_type: STRING
       - name: public_stableswap_pools
         config:
           y42_table:
