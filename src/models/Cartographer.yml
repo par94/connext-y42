@@ -184,6 +184,31 @@ sources:
               - incremental
             default_cursor_field: []
             source_defined_primary_key: []
+        columns:
+          - name: adopted
+            data_type: STRING
+          - name: avg_usd_price
+            data_type: FLOAT
+          - name: domain
+            data_type: STRING
+          - name: local
+            data_type: STRING
+          - name: total_balance
+            data_type: FLOAT
+          - name: total_balance_usd
+            data_type: FLOAT
+          - name: total_locked
+            data_type: FLOAT
+          - name: total_locked_usd
+            data_type: FLOAT
+          - name: total_removed
+            data_type: FLOAT
+          - name: total_removed_usd
+            data_type: FLOAT
+          - name: total_supplied
+            data_type: FLOAT
+          - name: total_supplied_usd
+            data_type: FLOAT
       - name: public_router_liquidity_events
         config:
           y42_table:
