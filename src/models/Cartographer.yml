@@ -319,6 +319,55 @@ sources:
               - incremental
             default_cursor_field: []
             source_defined_primary_key: []
+        columns:
+          - name: address
+            data_type: STRING
+          - name: adopted
+            data_type: STRING
+          - name: adopted_decimal
+            data_type: FLOAT
+          - name: asset_canonical_id
+            data_type: STRING
+          - name: asset_domain
+            data_type: STRING
+          - name: asset_usd_price
+            data_type: FLOAT
+          - name: balance
+            data_type: FLOAT
+          - name: balance_usd
+            data_type: FLOAT
+          - name: canonical_domain
+            data_type: STRING
+          - name: canonical_id
+            data_type: STRING
+          - name: decimal
+            data_type: FLOAT
+          - name: domain
+            data_type: STRING
+          - name: fee_earned_usd
+            data_type: FLOAT
+          - name: fees_earned
+            data_type: FLOAT
+          - name: id
+            data_type: STRING
+          - name: key
+            data_type: STRING
+          - name: local
+            data_type: STRING
+          - name: locked
+            data_type: FLOAT
+          - name: locked_usd
+            data_type: FLOAT
+          - name: removed
+            data_type: FLOAT
+          - name: removed_usd
+            data_type: FLOAT
+          - name: router_address
+            data_type: STRING
+          - name: supplied
+            data_type: FLOAT
+          - name: supplied_usd
+            data_type: FLOAT
       - name: public_stableswap_exchanges
         config:
           y42_table:
