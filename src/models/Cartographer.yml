@@ -371,6 +371,19 @@ sources:
               - - pool_id
               - - domain
               - - provider
+        columns:
+          - name: balance
+            data_type: FLOAT
+          - name: domain
+            data_type: STRING
+          - name: last_timestamp
+            data_type: INTEGER
+          - name: lp_token
+            data_type: STRING
+          - name: pool_id
+            data_type: STRING
+          - name: provider
+            data_type: STRING
       - name: public_stableswap_lp_transfers
         config:
           y42_table:
@@ -516,6 +529,41 @@ sources:
             source_defined_primary_key:
               - - domain
               - - key
+        columns:
+          - name: admin_fee
+            data_type: STRING
+          - name: balances
+            data_type: STRING
+          - name: domain
+            data_type: STRING
+          - name: future_a
+            data_type: INTEGER
+          - name: future_a_time
+            data_type: INTEGER
+          - name: initial_a
+            data_type: INTEGER
+          - name: initial_a_time
+            data_type: INTEGER
+          - name: invariant
+            data_type: STRING
+          - name: is_active
+            data_type: BOOLEAN
+          - name: key
+            data_type: STRING
+          - name: lp_token
+            data_type: STRING
+          - name: lp_token_supply
+            data_type: STRING
+          - name: pool_token_decimals
+            data_type: STRING
+          - name: pooled_tokens
+            data_type: STRING
+          - name: swap_fee
+            data_type: STRING
+          - name: token_precision_multipliers
+            data_type: STRING
+          - name: virtual_price
+            data_type: STRING
       - name: public_transfers_with_numeric_id
         config:
           y42_table:
@@ -590,5 +638,137 @@ sources:
             supported_sync_modes:
               - full_refresh
               - incremental
-            default_cursor_field: []
+            default_cursor_field:
+              - numeric_id
             source_defined_primary_key: []
+        columns:
+          - name: backoff
+            data_type: INTEGER
+          - name: bridged_amt
+            data_type: STRING
+          - name: call_data
+            data_type: STRING
+          - name: canonical_domain
+            data_type: STRING
+          - name: canonical_id
+            data_type: STRING
+          - name: delegate
+            data_type: STRING
+          - name: destination_chain
+            data_type: STRING
+          - name: destination_domain
+            data_type: STRING
+          - name: destination_local_amount
+            data_type: STRING
+          - name: destination_local_asset
+            data_type: STRING
+          - name: destination_transacting_amount
+            data_type: STRING
+          - name: destination_transacting_asset
+            data_type: STRING
+          - name: error_message
+            data_type: STRING
+          - name: error_status
+            data_type: STRING
+          - name: execute_block_number
+            data_type: INTEGER
+          - name: execute_caller
+            data_type: STRING
+          - name: execute_gas_limit
+            data_type: STRING
+          - name: execute_gas_price
+            data_type: STRING
+          - name: execute_origin_sender
+            data_type: STRING
+          - name: execute_simulation_from
+            data_type: STRING
+          - name: execute_simulation_input
+            data_type: STRING
+          - name: execute_simulation_network
+            data_type: STRING
+          - name: execute_simulation_to
+            data_type: STRING
+          - name: execute_timestamp
+            data_type: INTEGER
+          - name: execute_transaction_hash
+            data_type: STRING
+          - name: execute_tx_origin
+            data_type: STRING
+          - name: message_hash
+            data_type: STRING
+          - name: message_status
+            data_type: STRING
+          - name: next_execution_timestamp
+            data_type: INTEGER
+          - name: nonce
+            data_type: INTEGER
+          - name: normalized_in
+            data_type: STRING
+          - name: numeric_id
+            data_type: INTEGER
+          - name: origin_bridged_amount
+            data_type: STRING
+          - name: origin_bridged_asset
+            data_type: STRING
+          - name: origin_chain
+            data_type: STRING
+          - name: origin_domain
+            data_type: STRING
+          - name: origin_sender
+            data_type: STRING
+          - name: origin_transacting_amount
+            data_type: STRING
+          - name: origin_transacting_asset
+            data_type: STRING
+          - name: receive_local
+            data_type: BOOLEAN
+          - name: reconcile_block_number
+            data_type: INTEGER
+          - name: reconcile_caller
+            data_type: STRING
+          - name: reconcile_gas_limit
+            data_type: STRING
+          - name: reconcile_gas_price
+            data_type: STRING
+          - name: reconcile_timestamp
+            data_type: INTEGER
+          - name: reconcile_transaction_hash
+            data_type: STRING
+          - name: reconcile_tx_origin
+            data_type: STRING
+          - name: relayer_fees
+            data_type: STRING
+          - name: router_fee
+            data_type: STRING
+          - name: routers
+            data_type: STRING
+          - name: slippage
+            data_type: FLOAT
+          - name: status
+            data_type: STRING
+          - name: to
+            data_type: STRING
+          - name: transfer_id
+            data_type: STRING
+          - name: ttr
+            data_type: INTEGER
+          - name: ttv
+            data_type: INTEGER
+          - name: update_time
+            data_type: TIMESTAMP
+          - name: updated_slippage
+            data_type: FLOAT
+          - name: xcall_block_number
+            data_type: INTEGER
+          - name: xcall_caller
+            data_type: STRING
+          - name: xcall_gas_limit
+            data_type: STRING
+          - name: xcall_gas_price
+            data_type: STRING
+          - name: xcall_timestamp
+            data_type: INTEGER
+          - name: xcall_transaction_hash
+            data_type: STRING
+          - name: xcall_tx_origin
+            data_type: STRING
