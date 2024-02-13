@@ -284,6 +284,9 @@ sources:
             default_cursor_field: []
             source_defined_primary_key:
               - - address
+        columns:
+          - name: address
+            data_type: STRING
       - name: public_routers_with_balances
         config:
           y42_table:
@@ -332,6 +335,8 @@ sources:
             data_type: STRING
           - name: asset_usd_price
             data_type: FLOAT
+            tests:
+              - not_null
           - name: balance
             data_type: FLOAT
           - name: balance_usd
