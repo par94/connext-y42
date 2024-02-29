@@ -718,7 +718,7 @@ sources:
               - full_refresh
               - incremental
             default_cursor_field:
-              - numeric_id
+              - update_time
             source_defined_primary_key: []
         columns:
           - name: backoff
