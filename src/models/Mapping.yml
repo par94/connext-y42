@@ -7,7 +7,7 @@ sources:
         type: source-google-sheets
         connection: Mapping
         settings:
-          row_batch_size: 1000
+          row_batch_size: 10000
           names_conversion: true
       y42:
         apiVersion: v3
