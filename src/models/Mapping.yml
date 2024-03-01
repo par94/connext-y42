@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: Mapping
+    config:
+      y42_source:
+        type: source-google-sheets
+        connection: Mapping
+        settings:
+          row_batch_size: 1000
+          names_conversion: true
+      y42:
+        apiVersion: v3
+    meta:
+      experts:
+        users:
+          - anton@connext.network
