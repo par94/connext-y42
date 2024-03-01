@@ -52,6 +52,8 @@ sources:
             data_type: STRING
           - name: supplied
             data_type: FLOAT
+        tags:
+          - liquidity
       - name: public_asset_prices
         config:
           y42_table:
@@ -81,6 +83,8 @@ sources:
             data_type: FLOAT
           - name: timestamp
             data_type: INTEGER
+        tags:
+          - liquidity
       - name: public_assets
         config:
           y42_table:
@@ -122,6 +126,8 @@ sources:
             data_type: STRING
           - name: local
             data_type: STRING
+        tags:
+          - liquidity
       - name: public_daily_router_tvl
         config:
           y42_table:
@@ -197,6 +203,8 @@ sources:
             data_type: FLOAT
           - name: volume
             data_type: FLOAT
+        tags:
+          - liquidity
       - name: public_router_liquidity
         config:
           y42_table:
@@ -334,6 +342,8 @@ sources:
         columns:
           - name: address
             data_type: STRING
+        tags:
+          - liquidity
       - name: public_routers_with_balances
         config:
           y42_table:
@@ -420,6 +430,8 @@ sources:
             data_type: FLOAT
           - name: supplied_usd
             data_type: FLOAT
+        tags:
+          - liquidity
       - name: public_stableswap_exchanges
         config:
           y42_table:
@@ -477,6 +489,8 @@ sources:
             data_type: FLOAT
           - name: transaction_hash
             data_type: STRING
+        tags:
+          - liquidity
       - name: public_stableswap_lp_balances
         config:
           y42_table:
@@ -690,6 +704,8 @@ sources:
             data_type: STRING
           - name: virtual_price
             data_type: STRING
+        tags:
+          - liquidity
       - name: public_transfers_with_numeric_id
         config:
           y42_table:
