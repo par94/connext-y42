@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: transfers_with_price_ttr_ttv_y42_dedup
+  - name: daily_transfer_volume_y42_view
     meta:
       experts:
         users:
