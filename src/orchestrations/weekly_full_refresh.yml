@@ -1,0 +1,10 @@
+version: 2
+
+orchestrations:
+  - name: weekly_full_refresh
+    config:
+      enabled: true
+      command: y42 build
+      cron: 0 7 * *
+      y42:
+        apiVersion: v1
