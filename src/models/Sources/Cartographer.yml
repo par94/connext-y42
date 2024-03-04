@@ -179,8 +179,7 @@ sources:
             supported_sync_modes:
               - full_refresh
               - incremental
-            default_cursor_field:
-              - transfer_date
+            default_cursor_field: []
             source_defined_primary_key: []
         columns:
           - name: asset
