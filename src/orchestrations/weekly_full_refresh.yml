@@ -4,7 +4,7 @@ orchestrations:
   - name: weekly_full_refresh
     config:
       enabled: true
-      command: y42 build
-      cron: 0 7 * *
+      command: y42 build --full-refresh
+      cron: 0 0 * *
       y42:
         apiVersion: v1
