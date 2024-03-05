@@ -16,6 +16,17 @@ sources:
         identifier: source__cartographer_router_with_balances
       - name: raw__dlt_loads
         identifier: _dlt_loads
+        columns:
+          - name: load_id
+            data_type: STRING
+          - name: schema_name
+            data_type: STRING
+          - name: status
+            data_type: INT64
+          - name: inserted_at
+            data_type: TIMESTAMP
+          - name: schema_version_hash
+            data_type: STRING
       - name: raw_source_socket_routes__payloads_logs
         identifier: source_socket_routes__payloads_logs
       - name: raw_stg__cln_source_defilamma_bridges_history_wallets
@@ -42,6 +53,41 @@ sources:
         identifier: source_defilamma_bridges_history_tokens
       - name: raw_source_defilamma_bridges
         identifier: source_defilamma_bridges
+        columns:
+          - name: id
+            data_type: INT64
+          - name: name
+            data_type: STRING
+          - name: display_name
+            data_type: STRING
+          - name: icon
+            data_type: STRING
+          - name: volume_prev_day
+            data_type: FLOAT64
+          - name: volume_prev2_day
+            data_type: FLOAT64
+          - name: last_hourly_volume
+            data_type: FLOAT64
+          - name: current_day_volume
+            data_type: FLOAT64
+          - name: last_daily_volume
+            data_type: FLOAT64
+          - name: day_before_last_volume
+            data_type: FLOAT64
+          - name: weekly_volume
+            data_type: FLOAT64
+          - name: monthly_volume
+            data_type: FLOAT64
+          - name: chains
+            data_type: JSON
+          - name: destination_chain
+            data_type: STRING
+          - name: upload_timestamp
+            data_type: TIMESTAMP
+          - name: _dlt_load_id
+            data_type: STRING
+          - name: _dlt_id
+            data_type: STRING
       - name: raw_stg__inputs_connext_routes_working_pathways
         identifier: stg__inputs_connext_routes_working_pathways
       - name: raw_source_socket__routes_steps
