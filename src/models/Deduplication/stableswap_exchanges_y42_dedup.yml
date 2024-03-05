@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: stableswap_exchanges_y42_dedup
+    meta:
+      experts:
+        users:
+          - anton@connext.network
+    config:
+      y42:
+        apiVersion: v1
