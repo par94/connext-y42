@@ -1,0 +1,34 @@
+version: 2
+
+sources:
+  - name: bq_stage
+    config:
+      y42:
+        apiVersion: v3
+    meta:
+      experts:
+        users:
+          - anton@connext.network
+    database: mainnet-bigq
+    schema: stage
+    tables:
+      - name: stage_connext_tokens
+        identifier: connext_tokens
+      - name: stage_source__lifi_routes__payloads_logs
+        identifier: source__lifi_routes__payloads_logs
+      - name: stage_source_hop_explorer__transfers
+        identifier: source_hop_explorer__transfers
+      - name: stage_source_lifi__bridges_exchanges
+        identifier: source_lifi__bridges_exchanges
+      - name: stage_source_lifi__chains
+        identifier: source_lifi__chains
+      - name: stage_source_lifi__connections
+        identifier: source_lifi__connections
+      - name: stage_source_lifi__pathways
+        identifier: source_lifi__pathways
+      - name: stage_source_lifi__tokens
+        identifier: source_lifi__tokens
+      - name: stage_source_lifi__tools
+        identifier: source_lifi__tools
+      - name: stage_source_lifi__routes
+        identifier: source_lifi__routes

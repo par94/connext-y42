@@ -43,6 +43,27 @@ sources:
             group: null
             supported_sync_modes:
               - full_refresh
+        columns:
+          - name: chain_id
+            data_type: STRING
+          - name: confirmations
+            data_type: STRING
+          - name: domain_id
+            data_type: STRING
+          - name: name
+            data_type: STRING
+          - name: native_currency
+            data_type: STRING
+          - name: native_decimals
+            data_type: STRING
+          - name: native_symbol
+            data_type: STRING
+          - name: short_name
+            data_type: STRING
+          - name: type
+            data_type: STRING
+          - name: _y42_extracted_at
+            data_type: TIMESTAMP
       - name: contracts
         config:
           y42_table:
