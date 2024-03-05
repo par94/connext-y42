@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: daily_transfer_volume
+  - name: daily_transfer_volume_y42_dedup
     meta:
       experts:
         users:
