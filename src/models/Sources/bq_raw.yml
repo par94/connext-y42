@@ -1,0 +1,64 @@
+version: 2
+
+sources:
+  - name: bq_raw
+    config:
+      y42:
+        apiVersion: v3
+    meta:
+      experts:
+        users:
+          - anton@connext.network
+    database: mainnet-bigq
+    schema: raw
+    tables:
+      - name: raw_source__cartographer_router_with_balances
+        identifier: source__cartographer_router_with_balances
+      - name: raw__dlt_loads
+        identifier: _dlt_loads
+      - name: raw_source_socket_routes__payloads_logs
+        identifier: source_socket_routes__payloads_logs
+      - name: raw_stg__cln_source_defilamma_bridges_history_wallets
+        identifier: stg__cln_source_defilamma_bridges_history_wallets
+      - name: raw_stg_all_possible_pathways__routes__lifi_socket
+        identifier: stg_all_possible_pathways__routes__lifi_socket
+      - name: raw_source_defilamma_stables
+        identifier: source_defilamma_stables
+      - name: raw_source_socket__routes
+        identifier: source_socket__routes
+      - name: raw__dlt_version
+        identifier: _dlt_version
+      - name: raw_source_socket__routes_unsupported_paths
+        identifier: source_socket__routes_unsupported_paths
+      - name: raw_stg__inputs_connext_routes_skipped_pathways
+        identifier: stg__inputs_connext_routes_skipped_pathways
+      - name: raw_source_socket__chains
+        identifier: source_socket__chains
+      - name: raw_stg__cln_source_defilamma_bridges_history_tokens
+        identifier: stg__cln_source_defilamma_bridges_history_tokens
+      - name: raw_source_socket__bridges
+        identifier: source_socket__bridges
+      - name: raw_source_defilamma_bridges_history_tokens
+        identifier: source_defilamma_bridges_history_tokens
+      - name: raw_source_defilamma_bridges
+        identifier: source_defilamma_bridges
+      - name: raw_stg__inputs_connext_routes_working_pathways
+        identifier: stg__inputs_connext_routes_working_pathways
+      - name: raw_source_socket__routes_steps
+        identifier: source_socket__routes_steps
+      - name: raw_source_defilamma_chains
+        identifier: source_defilamma_chains
+      - name: raw_source_defilamma_protocols
+        identifier: source_defilamma_protocols
+      - name: raw_source_socket__tokens
+        identifier: source_socket__tokens
+      - name: raw__dlt_pipeline_state
+        identifier: _dlt_pipeline_state
+      - name: raw_stg_source_lifi_socket__routes__optimized_by_pathways
+        identifier: stg_source_lifi_socket__routes__optimized_by_pathways
+      - name: raw_source_chaindata_nija__metadata
+        identifier: source_chaindata_nija__metadata
+      - name: raw_source_defilamma_bridges_history_wallets
+        identifier: source_defilamma_bridges_history_wallets
+      - name: raw_defilamma_stables
+        identifier: defilamma_stables
