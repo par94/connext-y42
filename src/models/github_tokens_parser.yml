@@ -11,3 +11,5 @@ sources:
       experts:
         users:
           - anton@connext.network
+    tables:
+      - name: github_parser_chains
