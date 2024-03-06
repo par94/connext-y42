@@ -12,4 +12,5 @@ sources:
         users:
           - anton@connext.network
     tables:
-      - name: github_tokens_parser
+      - name: github_parser_chains
+      - name: github_parser_tokens
