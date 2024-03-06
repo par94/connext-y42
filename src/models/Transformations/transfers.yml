@@ -11,6 +11,7 @@ models:
         apiVersion: v1
       tags:
         - liquidity
+        - dashboard
     columns:
       - name: asset_usd_price
         data_type: FLOAT64
