@@ -550,3 +550,7 @@ sources:
             data_type: STRING
           - name: upload_datetime
             data_type: TIMESTAMP
+      - name: stage_connext_contracts
+        identifier: connext_contracts
+      - name: stage_stg_transfers_raw_usd
+        identifier: stg_transfers_raw_usd
