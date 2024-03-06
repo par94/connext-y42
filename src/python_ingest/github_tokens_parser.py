@@ -35,7 +35,7 @@ def github_parser_chains(context) -> pd.DataFrame:
     df_native_currency.columns = ['nativeCurrency.' + col for col in df_native_currency.columns]
     # Concatenating the expanded 'nativeCurrency' DataFrame with the original DataFrame
     df_expanded = pd.concat([df, df_native_currency], axis=1)
-    df_expanded.drop('nativeCurrency','assetId','subgraphs','explorers', 'gasEstimates')
+    
     logging.info(df_expanded)
     logging.info("Data fetched and DataFrame created successfully.")
     # to learn how to set up incremental updates and more
