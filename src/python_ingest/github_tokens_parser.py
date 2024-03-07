@@ -37,11 +37,13 @@ def github_parser_chains(context) -> pd.DataFrame:
     df_expanded = pd.concat([df, df_native_currency], axis=1)
 
     for column in df_expanded.columns:
-        df_expanded[column] = df_expanded[column].astype(str)
+        #df_expanded[column] = df_expanded[column].astype(str)
         if df_expanded[column].dtype == 'object':
+            df_expanded[column]= df_expanded[column].fillna('')
             df_expanded[column] = df_expanded[column].astype(str)
+            #df_expanded[column]= df_expanded[column].fillna('')
     
-    df_expanded = df_expanded.fillna('')
+    #df_expanded = df_expanded.fillna('')
 
     
     logging.info(df_expanded)
@@ -98,8 +100,9 @@ def github_parser_tokens(context) -> pd.DataFrame:
     df_assets_expanded = pd.DataFrame(expanded_rows)
     
     for column in df_assets_expanded.columns:
-        df_assets_expanded[column] = df_assets_expanded[column].astype(str)
+        #df_assets_expanded[column] = df_assets_expanded[column].astype(str)
         if df_assets_expanded[column].dtype == 'object':
+            df_assets_expanded[column] = df_assets_expanded[column].fillna('')
             df_assets_expanded[column] = df_assets_expanded[column].astype(str)
 
     df_assets_expanded = df_assets_expanded.fillna('')
