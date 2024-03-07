@@ -35,6 +35,13 @@ def github_parser_chains(context) -> pd.DataFrame:
     df_native_currency.columns = ['nativeCurrency.' + col for col in df_native_currency.columns]
     # Concatenating the expanded 'nativeCurrency' DataFrame with the original DataFrame
     df_expanded = pd.concat([df, df_native_currency], axis=1)
+
+    for column in df_expanded.columns:
+        if df_expanded[column].dtype == 'object':
+            df_expanded[column] = df_expanded[column].astype(str)
+    
+    df_expanded = df_expanded.fillna('')
+
     
     logging.info(df_expanded)
     logging.info("Data fetched and DataFrame created successfully.")
@@ -88,6 +95,12 @@ def github_parser_tokens(context) -> pd.DataFrame:
 
     # Convert the list of dictionaries to a DataFrame
     df_assets_expanded = pd.DataFrame(expanded_rows)
+    
+    for column in df_assets_expanded.columns:
+        if df_assets_expanded[column].dtype == 'object':
+            df_assets_expanded[column] = df_assets_expanded[column].astype(str)
+
+    df_assets_expanded = df_assets_expanded.fillna('')
 
     logging.info(df_assets_expanded)
     logging.info("Data fetched and DataFrame created successfully.")
