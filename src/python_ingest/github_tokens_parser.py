@@ -80,13 +80,6 @@ def github_parser_tokens(context) -> pd.DataFrame:
     # Concatenating the expanded 'nativeCurrency' DataFrame with the original DataFrame
     df_expanded = pd.concat([df, df_native_currency], axis=1)
 
-    for column in df_expanded.columns:
-        #df_expanded[column] = df_expanded[column].astype(str)
-        if df_expanded[column].dtype == 'object':
-            df_expanded[column]= df_expanded[column].fillna('')
-            df_expanded[column] = df_expanded[column].astype(str)
-            #df_expanded[column]= df_expanded[column].fillna('')
-
     # Correcting the code to dynamically append assetId information based on df_expanded as starting point and fixing lint errors
     expanded_rows = []
     for index, row in df_expanded.iterrows():
