@@ -114,7 +114,7 @@ def github_parser_tokens(context) -> pd.DataFrame:
     
     for column in df_assets_expanded.columns:
         #df_assets_expanded[column] = df_assets_expanded[column].astype(str)
-        if df_assets_expanded[column].dtype == 'object':
+        if df_assets_expanded[column].dtype == 'object' or df_assets_expanded[column].dtype == 'float':
             df_assets_expanded[column] = df_assets_expanded[column].fillna('')
             df_assets_expanded[column] = df_assets_expanded[column].astype(str)
 
