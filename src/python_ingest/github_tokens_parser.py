@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import logging
 import json
+import re
 
 # use the @data_loader decorator to materialize an asset
 # make sure you have a corresponding .yml table definition matching the function's name
@@ -13,23 +14,29 @@ def github_parser_chains(context) -> pd.DataFrame:
     # Reference secrets if needed
     all_secrets = context.secrets.all() # get all secrets saved within this space
 
-
-    # Your code goes here
     url = "https://github.com/connext/chaindata/blob/main/crossChain.json"
 
     response = requests.get(url)
-    logging.info(response)
+    #logging.info(response)
     data = json.loads(response.content)
+    #logging.info(data)
     data_clean = data['payload']['blob']['rawLines']
     combined_json_str = "".join(data_clean)
+    #logging.info(combined_json_str)
     # Reconstructing JSON from individual lines
+    combined_json_str = re.sub(r'\s+', ' ', combined_json_str)
+    error_text = '''18, }, "0x2416092f143378750bb29b79eD961ab195CcEea5": { "name": "Renzo Restaked ETH", "symbol": "ezETH", "decimals": 18 }'''
+    fixed_text = '''18 }, "0x2416092f143378750bb29b79eD961ab195CcEea5": { "name": "Renzo Restaked ETH", "symbol": "ezETH", "decimals": 18 }'''
+
+    combined_json_str = combined_json_str.replace(error_text,fixed_text)
+
     parsed_json = json.loads(combined_json_str)
     data_clean = parsed_json
-    logging.info(data_clean)
+    #logging.info(data_clean)
 
     # Return a DataFrame which will be materialized within your data warehouse
     df = pd.DataFrame(data_clean)
-    logging.info(df)
+    #logging.info(df)
     df_native_currency = pd.json_normalize(df['nativeCurrency'])
     # Renaming columns for clarity, if desired
     df_native_currency.columns = ['nativeCurrency.' + col for col in df_native_currency.columns]
@@ -46,8 +53,8 @@ def github_parser_chains(context) -> pd.DataFrame:
     #df_expanded = df_expanded.fillna('')
 
     
-    logging.info(df_expanded)
-    logging.info("Data fetched and DataFrame created successfully.")
+    #logging.info(df_expanded)
+    #logging.info("Data fetched and DataFrame created successfully.")
     # to learn how to set up incremental updates and more
     # please visit https://docs.y42.dev/docs/sources/ingest-data-using-python
     return df_expanded
@@ -66,6 +73,12 @@ def github_parser_tokens(context) -> pd.DataFrame:
     data = json.loads(response.content)
     data_clean = data['payload']['blob']['rawLines']
     combined_json_str = "".join(data_clean)
+
+    combined_json_str = re.sub(r'\s+', ' ', combined_json_str)
+    error_text = '''18, }, "0x2416092f143378750bb29b79eD961ab195CcEea5": { "name": "Renzo Restaked ETH", "symbol": "ezETH", "decimals": 18 }'''
+    fixed_text = '''18 }, "0x2416092f143378750bb29b79eD961ab195CcEea5": { "name": "Renzo Restaked ETH", "symbol": "ezETH", "decimals": 18 }'''
+
+    combined_json_str = combined_json_str.replace(error_text,fixed_text)
     # Reconstructing JSON from individual lines
     parsed_json = json.loads(combined_json_str)
     data_clean = parsed_json
