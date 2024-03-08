@@ -5,6 +5,6 @@ orchestrations:
     config:
       enabled: true
       command: y42 build --full-refresh
-      cron: 0 0 * *
+      cron: 0 0 * * *
       y42:
         apiVersion: v1
