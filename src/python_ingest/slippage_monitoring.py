@@ -5,6 +5,7 @@ import logging
 import json
 import re
 import asyncio
+import datetime
 
 # use the @data_loader decorator to materialize an asset
 # make sure you have a corresponding .yml table definition matching the function's name
@@ -89,7 +90,7 @@ async def slippage_monitoring(context) -> pd.DataFrame:
             "endpoint": "https://bsc-mainnet.blastapi.io/46b64ddd-127f-4145-b72d-3770f3927c96"
         }
     }
-
+    timestamp = datetime.utcnow()
     for i in range(17,21):
 
         amount = 3*10**i
@@ -103,7 +104,8 @@ async def slippage_monitoring(context) -> pd.DataFrame:
                 "domain_id": asset,
                 "asset": assets[asset]['adopted'],
                 "amount": amount,
-                "slippage": response
+                "slippage": response,
+                "timestamp": timestamp
             }
             temp_df = pd.DataFrame([combined_data])
             df = pd.concat([df, temp_df])
