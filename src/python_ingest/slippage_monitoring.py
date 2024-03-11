@@ -1,3 +1,4 @@
+from y42.v1.decorators import data_loader
 import requests
 import pandas as pd
 import logging
