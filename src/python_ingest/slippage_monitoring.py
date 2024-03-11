@@ -114,6 +114,11 @@ async def slippage_monitoring(context) -> pd.DataFrame:
     df
 
     logging.info("Data fetched and DataFrame created successfully.")
+    for column in df.columns:
+        #df_expanded[column] = df_expanded[column].astype(str)
+        if df[column].dtype == 'object':
+            df[column]= df[column].fillna('')
+            df[column] = df[column].astype(str)
     
     # to learn how to set up incremental updates and more
     # please visit https://docs.y42.dev/docs/sources/ingest-data-using-python
