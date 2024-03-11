@@ -13,3 +13,14 @@ sources:
           - anton@connext.network
     tables:
       - name: slippage_monitoring
+        columns:
+          - name: domain_id
+            data_type: STRING
+          - name: asset
+            data_type: STRING
+          - name: amount
+            data_type: STRING
+          - name: slippage
+            data_type: FLOAT
+          - name: timestamp
+            data_type: TIMESTAMP
