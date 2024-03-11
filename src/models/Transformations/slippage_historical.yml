@@ -2,6 +2,7 @@ version: 2
 
 models:
   - name: slippage_historical
+    materialized: table
     meta:
       experts:
         users:
@@ -20,3 +21,4 @@ models:
         data_type: FLOAT64
       - name: timestamp
         data_type: TIMESTAMP
+
