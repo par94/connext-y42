@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: slippage_historical
-    materialized: table
+    #materialized: table
     meta:
       experts:
         users:
