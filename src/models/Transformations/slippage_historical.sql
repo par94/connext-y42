@@ -1,4 +1,4 @@
-{{ config(materialized='incremental', unique_key='row_hash', incremental_strategy='merge') }}
+{{ config(materialized='incremental', unique_key='row_hash', incremental_strategy='append') }}
 
 WITH source_data AS (
     SELECT
