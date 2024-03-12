@@ -1,5 +1,6 @@
 SELECT
-    amount/power(10,18) as amount_eth,
+    slippage,
+    amount / power(10, 18) AS amount_eth,
     CASE
         WHEN domain = '6648936' THEN 'Ethereum'
         WHEN domain = '1869640809' THEN 'Optimism'
@@ -14,8 +15,6 @@ SELECT
             domain
     END
         AS chain_name,
-    FORMAT_TIMESTAMP('%Y-%m-%d %H:%M:%S', TIMESTAMP_SECONDS(timestamp)) AS timestamp_time,
-    slippage
+    format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_seconds(timestamp)) AS timestamp_time
 FROM
     {{ ref('slippage_historical') }}
-    
