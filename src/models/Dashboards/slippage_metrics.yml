@@ -9,3 +9,6 @@ models:
     config:
       y42:
         apiVersion: v1
+      tags:
+        - dashboard
+        - liquidity
