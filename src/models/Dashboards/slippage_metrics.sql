@@ -1,6 +1,6 @@
 SELECT
     slippage,
-    amount / power(10, 18) AS amount_eth,
+    CAST(amount as BIGINT) / power(10, 18) AS amount_eth,
     CASE
         WHEN domain = '6648936' THEN 'Ethereum'
         WHEN domain = '1869640809' THEN 'Optimism'
