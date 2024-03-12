@@ -18,5 +18,4 @@ SELECT
     slippage
 FROM
     {{ ref('slippage_historical') }}
-WHERE
     
