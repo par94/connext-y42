@@ -11,5 +11,6 @@ WITH source_data AS (
     FROM {{ source('slippage_monitoring', 'slippage_monitoring') }}
 )
 
+
 SELECT *
 FROM source_data
