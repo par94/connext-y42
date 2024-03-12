@@ -1,6 +1,6 @@
 --{{ config(materialized='incremental') }}
 
-{% set source_count = dbt_utils.get_row_count({{ ref('slippage_historical') }}) %}
+{% set source_count = dbt_utils.get_row_count(ref('slippage_historical')) %}
 {% set model_count = dbt_utils.get_row_count(this) %}
 
 {% if source_count > model_count %}
