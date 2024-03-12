@@ -11,6 +11,7 @@ WITH source_data AS (
     FROM {{ source('slippage_monitoring', 'slippage_monitoring') }}
 )
 
-
+SELECT * FROM {{ ref('slippage_historical') }}
+UNION ALL
 SELECT *
 FROM source_data
