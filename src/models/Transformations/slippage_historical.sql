@@ -1,4 +1,4 @@
-{{ config(materialized='incremental', unique_key='row_hash') }}
+{{ config(materialized='incremental', unique_key='row_hash', incremental_strategy='merge') }}
 
 WITH source_data AS (
     SELECT
@@ -11,7 +11,12 @@ WITH source_data AS (
     FROM {{ source('slippage_monitoring', 'slippage_monitoring') }}
 )
 
-SELECT * FROM {{ this }}
-UNION ALL
 SELECT *
 FROM source_data
+
+{% if is_incremental() %}
+
+    -- this filter will only be applied on an incremental run
+    WHERE row_hash NOT IN (SELECT (row_hash) FROM {{ this }})
+
+{% endif %}
