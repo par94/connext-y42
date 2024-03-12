@@ -10,6 +10,8 @@ models:
     config:
       y42:
         apiVersion: v1
+      tags:
+        - liquidity
     columns:
       - name: domain_id
         data_type: STRING

@@ -1,10 +1,19 @@
 {{ config(materialized='incremental') }}
 
-WITH source_data AS (
-    SELECT *
-    --CURRENT_TIMESTAMP() AS version_timestamp -- Captures the refresh timestamp
-    FROM {{ source('slippage_monitoring', 'slippage_monitoring') }}
-)
+{% set source_count = dbt_utils.get_row_count(ref{{'slippage_historical'}}) %}
+{% set model_count = dbt_utils.get_row_count(this) %}
 
-SELECT *
-FROM source_data
+{% if source_count > model_count %}
+    -- If the source table has more rows, perform a complete copy
+    SELECT *
+    FROM ref{{'slippage_historical'}})
+{% else %}
+    -- If the source table has the same or fewer rows, perform an incremental update
+    SELECT *
+    FROM ref{{'slippage_historical'}})
+    WHERE row_hash NOT IN (
+        SELECT row_hash
+        FROM {{ this }}
+    )
+{% endif %}
+
