@@ -1,8 +1,10 @@
---with cte as (
- --   select * from {{ this }}
----)
---select * from cte
+{{ config(materialized='incremental') }}
 
-select * from {{ ref('slippage_historical1') }}
-union all
-select * from {{ source('slippage_monitoring', 'slippage_monitoring') }}
+WITH source_data AS (
+    SELECT *
+    --CURRENT_TIMESTAMP() AS version_timestamp -- Captures the refresh timestamp
+    FROM {{ source('slippage_monitoring', 'slippage_monitoring') }}
+)
+
+SELECT *
+FROM source_data
