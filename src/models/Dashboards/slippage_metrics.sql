@@ -15,6 +15,6 @@ SELECT
             domain_id
     END
         AS chain_name,
-    format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_seconds(timestamp)) AS timestamp_time
+    format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_seconds(CAST(timestamp as INT)) AS timestamp_time
 FROM
     {{ ref('slippage_historical') }}
