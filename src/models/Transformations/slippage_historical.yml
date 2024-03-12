@@ -21,4 +21,5 @@ models:
         data_type: FLOAT64
       - name: timestamp
         data_type: TIMESTAMP
-
+      - name: row_hash
+        data_type: BYTES
