@@ -58,12 +58,41 @@ Destination_fast_Volume As (
     GROUP BY 1,2,3
 ),
 Combined_metrics AS (
-    SELECT *
+    SELECT 
+    dv.Routers as routers,
+    dv.Origin_Bridged_Asset as asset,
+    dv.Destination_Domain as domain,
+    usd_volume_1d,
+    usd_volume_7d,
+    usd_volume_30d,
+    volume_1d,
+    volume_7d,
+    volume_30d,
+    usd_volume_fast_1d,
+    usd_volume_fast_7d,
+    usd_volume_fast_30d,
+    volume_fast_1d,
+    volume_fast_7d,
+    volume_fast_30d
     FROM
-    Destination_Volume dv Left JOIN Destination_fast_Volume dfv ON dv.Routers = dfv.Routers 
+    Destination_Volume dv FULL JOIN Destination_fast_Volume dfv ON dv.Routers = dfv.Routers 
     AND dv.Origin_Bridged_Asset = dfv.Origin_Bridged_Asset AND dv.Destination_Domain = dfv.Destination_Domain
 ),
+Router_metrics AS (
+    SELECT * FROM Combined_metrics cm 
+    CROSS JOIN UNNEST(cm.routers) AS router
+    FULL JOIN {{ source('Cartographer', 'public_routers_with_balances') }} rwb
+    ON router = rwb.router_address
+    AND cm.asset = rwb.adopted
+    AND cm.domain = rwb.domain
+'''
+    Full JOIN {{ source('Cartographer', 'public_routers_with_balances') }} rwb 
+    ON ARRAY(SELECT UNNEST(cm.routers))[OFFSET(0)] = rwb.router_address 
+    AND cm.asset = rwb.adopted
+    AND cm.domain = rwb.domain
+'''
+)
+SELECT * FROM Router_metrics
 
-SELECT * FROM Combined_metrics
 
 
