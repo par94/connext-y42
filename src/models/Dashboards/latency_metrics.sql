@@ -10,6 +10,7 @@ SELECT
         WHEN origin_domain = '1818848877' THEN 'Linea'
         WHEN origin_domain = '1835365481' THEN 'Metis'
         WHEN origin_domain = '1650553709' THEN 'Base'
+        WHEN origin_domain = '1836016741' THEN 'Mode'
         ELSE origin_domain
     END AS origin_chain_name,
     CASE
@@ -22,6 +23,7 @@ SELECT
         WHEN destination_domain = '1818848877' THEN 'Linea'
         WHEN destination_domain = '1835365481' THEN 'Metis'
         WHEN destination_domain = '1650553709' THEN 'Base'
+        WHEN destination_domain = '1836016741' THEN 'Mode'
         ELSE destination_domain
     END AS dest_chain_name,
     CASE

@@ -1,6 +1,6 @@
 SELECT
     slippage,
-    CAST(amount as Numeric) / power(10, 18) AS amount_eth,
+    CAST(amount AS Numeric) / POWER(10, 18) AS amount_eth,
     CASE
         WHEN domain_id = '6648936' THEN 'Ethereum'
         WHEN domain_id = '1869640809' THEN 'Optimism'
@@ -15,6 +15,6 @@ SELECT
             domain_id
     END
         AS chain_name,
-    format_timestamp('%Y-%m-%d %H:%M:%S', timestamp) AS timestamp_time
+    FORMAT_TIMESTAMP('%Y-%m-%d %H:%M:%S', timestamp) AS timestamp_time
 FROM
     {{ ref('slippage_historical') }}
