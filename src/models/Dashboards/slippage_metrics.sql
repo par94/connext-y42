@@ -11,6 +11,7 @@ SELECT
         WHEN domain_id = '1818848877' THEN 'Linea'
         WHEN domain_id = '1835365481' THEN 'Metis'
         WHEN domain_id = '1650553709' THEN 'Base'
+        WHEN domain_id = '1836016741' THEN 'Mode'
         ELSE
             domain_id
     END
