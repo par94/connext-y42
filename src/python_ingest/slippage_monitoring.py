@@ -77,23 +77,37 @@ async def slippage_monitoring(context) -> pd.DataFrame:
     df = pd.DataFrame()
 
     assets = {
-        "1634886255": 
+        "1634886255": #arb
         {
             "local": "0x2983bf5c334743Aa6657AD70A55041d720d225dB",
             "adopted": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
             "endpoint": "https://arbitrum-mainnet.infura.io/v3/7e94bd49053945d7bdc52884c58d9fe5"
         },
-        "6450786":
+        "6450786": #bnb
         {
             "local": "0xA9CB51C666D2AF451d87442Be50747B31BB7d805",
             "adopted": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
             "endpoint": "https://bsc-mainnet.blastapi.io/46b64ddd-127f-4145-b72d-3770f3927c96"
+        },
+        "1818848877": #linea
+        {
+            "local": "0x0573ad07ca4f74757e5b2417bf225bebebcf66d9",
+            "adopted": "0xe5d7c2a44fffdf6b295a15c148167daaaf5cf34f",
+            "endpoint": "https://linea-mainnet.blastapi.io/46b64ddd-127f-4145-b72d-3770f3927c96"
+        },
+        "1836016741": #mode
+        {
+            "local": "0x609aefb9fb2ee8f2fdad5dc48efb8fa4ee0e80fb",
+            "adopted": "0x4200000000000000000000000000000000000006",
+            "endpoint": "https://mode-mainnet.blastapi.io/46b64ddd-127f-4145-b72d-3770f3927c96"
         }
+
     }
     timestamp = datetime.now(timezone.utc)
-    for i in range(17,21):
+    amount_array = [10**17, 3*10**17, 10**18, 3*10**18, 10**19, 3*10**19, 10**20, 3*10**20, 10**21, 3*10**21]
+    for amount in amount_array:
 
-        amount = 3*10**i
+        #amount = 3*10**i
 
         for asset in assets:
             print(asset)
