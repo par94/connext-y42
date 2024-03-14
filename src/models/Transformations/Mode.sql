@@ -60,6 +60,7 @@ Destination_fast_Volume As (
 Combined_metrics AS (
     SELECT 
     dv.Routers as routers,
+    SPLIT(TRIM(REGEXP_REPLACE(dv.routers, r'^\[|"]', ''), '[]"')) AS router_array,
     dv.Origin_Bridged_Asset as asset,
     dv.Destination_Domain as domain,
     usd_volume_1d,
@@ -80,17 +81,12 @@ Combined_metrics AS (
 ),
 Router_metrics AS (
     SELECT * FROM Combined_metrics cm 
-    CROSS JOIN UNNEST(cm.routers) AS router
-    FULL JOIN {{ source('Cartographer', 'public_routers_with_balances') }} rwb
+    CROSS JOIN UNNEST(cm.router_array) AS router
+    FULL JOIN (SELECT * FROM {{ source('Cartographer', 'public_routers_with_balances') }} rwb WHERE rwb.domain = '1836016741') rwb
     ON router = rwb.router_address
     AND cm.asset = rwb.adopted
     AND cm.domain = rwb.domain
-'''
-    Full JOIN {{ source('Cartographer', 'public_routers_with_balances') }} rwb 
-    ON ARRAY(SELECT UNNEST(cm.routers))[OFFSET(0)] = rwb.router_address 
-    AND cm.asset = rwb.adopted
-    AND cm.domain = rwb.domain
-'''
+
 )
 SELECT * FROM Router_metrics
 
