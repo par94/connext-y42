@@ -100,6 +100,7 @@ SELECT
         WHEN destination_transacting_asset = '0x0d505c03d30e65f6e9b4ef88855a47a89e4b7676' THEN 'ZOOMER'
         WHEN destination_transacting_asset = '0xb962150760f9a3bb00e3e9cf48297ee20ada4a33' THEN 'ZOOMER'
         WHEN destination_transacting_asset = '0x68deff5c5c132467316522b0a66436573abba80e' THEN 'ZOOMER'
+        WHEN destination_transacting_asset = '0x2416092f143378750bb29b79ed961ab195cceea5' THEN 'ezETH'
         ELSE destination_transacting_asset
     END AS destination_symbol,
 
@@ -199,6 +200,8 @@ SELECT
         WHEN origin_transacting_asset = '0x0d505c03d30e65f6e9b4ef88855a47a89e4b7676' THEN 'ZOOMER'
         WHEN origin_transacting_asset = '0xb962150760f9a3bb00e3e9cf48297ee20ada4a33' THEN 'ZOOMER'
         WHEN origin_transacting_asset = '0x68deff5c5c132467316522b0a66436573abba80e' THEN 'ZOOMER'
+
+        WHEN origin_transacting_asset = '0x2416092f143378750bb29b79ed961ab195cceea5' THEN 'ezETH'
         ELSE origin_transacting_asset
     END AS origin_symbol
 
