@@ -4,7 +4,5 @@ orchestrations:
   - name: test
     config:
       enabled: true
-      command: y42 build
+      command: y42 build --exclude slippage_historical
       cron: 0 1 1/1 * *
-      y42:
-        apiVersion: v1
