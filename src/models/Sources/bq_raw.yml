@@ -1063,3 +1063,20 @@ sources:
         identifier: dim_connext_routers_name
       - name: raw_stg__ninja_connext_prod_chains_tokens_clean
         identifier: stg__ninja_connext_prod_chains_tokens_clean
+        columns:
+          - name: chain_name
+            data_type: STRING
+          - name: domainid
+            data_type: STRING
+          - name: asset_symbol
+            data_type: STRING
+          - name: asset
+            data_type: STRING
+          - name: canonical_asset_address
+            data_type: STRING
+          - name: local
+            data_type: STRING
+          - name: adopted
+            data_type: STRING
+          - name: asset_decimals
+            data_type: INT64
