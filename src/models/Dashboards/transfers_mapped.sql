@@ -1,3 +1,4 @@
+WITH ttt AS (
 SELECT
     odm.name AS origin_domain_name,
     ddm.name AS destination_domain_name,
@@ -11,3 +12,5 @@ LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS odm ON
 LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS ddm ON t.`destination_domain` = ddm.`domainid`
 LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS otam ON t.`origin_transacting_asset` = otam.`assetid`
 LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS dtam ON t.`destination_transacting_asset` = dtam.`assetid`
+)
+SELECT * FROM ttt -- WHERE (destination_transacting_asset IS NOT NULL and destination_asset_name IS NULL) OR (origin_transacting_asset IS NOT NULL and origin_asset_name IS NULL)
