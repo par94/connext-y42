@@ -117,6 +117,7 @@ def github_parser_tokens(context) -> pd.DataFrame:
         if df_assets_expanded[column].dtype == 'object' or df_assets_expanded[column].dtype == 'float':
             df_assets_expanded[column] = df_assets_expanded[column].fillna('')
             df_assets_expanded[column] = df_assets_expanded[column].astype(str)
+            df_assets_expanded[column] = df_assets_expanded[column].str.lower()
 
     df_assets_expanded = df_assets_expanded.fillna('')
 
