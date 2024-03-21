@@ -1,3 +1,4 @@
+--fix pricing
 SELECT 
     COALESCE(dm.name, rwb.`asset_domain`) AS destination_domain_name,
     COALESCE(tam.`assetid_symbol`, rwb.`adopted`)  AS adopted_asset_name,
