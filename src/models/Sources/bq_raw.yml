@@ -855,94 +855,145 @@ sources:
         identifier: source_chaindata_nija__metadata
         columns:
           - name: name
+            description: ""
             data_type: STRING
           - name: chainid
+            description: ""
             data_type: INT64
           - name: domainid
+            description: ""
             data_type: STRING
           - name: confirmations
+            description: ""
             data_type: INT64
           - name: shortname
+            description: ""
             data_type: STRING
           - name: type
+            description: ""
             data_type: STRING
           - name: rpc
+            description: ""
             data_type: STRING
           - name: subgraph
+            description: ""
             data_type: STRING
           - name: analyticssubgraph
+            description: ""
             data_type: STRING
           - name: faucets
+            description: ""
             data_type: STRING
           - name: gasstations
+            description: ""
             data_type: STRING
           - name: explorers
+            description: ""
             data_type: STRING
           - name: nativecurrency_name
+            description: ""
             data_type: STRING
           - name: nativecurrency_symbol
+            description: ""
             data_type: STRING
           - name: nativecurrency_decimals
+            description: ""
             data_type: FLOAT64
           - name: subgraphs_runtime
+            description: ""
             data_type: STRING
           - name: subgraphs_analytics
+            description: ""
             data_type: STRING
           - name: gasestimates_prepare
+            description: ""
             data_type: STRING
           - name: gasestimates_fulfill
+            description: ""
             data_type: STRING
           - name: gasestimates_cancel
+            description: ""
             data_type: STRING
           - name: gasestimates_removeliquidity
+            description: ""
             data_type: STRING
           - name: gasestimates_prepareroutercontract
+            description: ""
             data_type: STRING
           - name: gasestimates_fulfillroutercontract
+            description: ""
             data_type: STRING
           - name: gasestimates_cancelroutercontract
+            description: ""
             data_type: STRING
           - name: gasestimates_removeliquidityroutercontract
+            description: ""
             data_type: STRING
           - name: gasestimates_preparel1
+            description: ""
             data_type: STRING
           - name: gasestimates_fulfilll1
+            description: ""
             data_type: STRING
           - name: gasestimates_cancell1
+            description: ""
             data_type: STRING
           - name: gasestimates_removeliquidityl1
+            description: ""
             data_type: STRING
           - name: gasestimates_gaspricefactor
+            description: ""
             data_type: STRING
           - name: watchtower_testnet
+            description: ""
             data_type: STRING
           - name: watchtower_mainnet
+            description: ""
             data_type: STRING
           - name: network
+            description: ""
             data_type: STRING
           - name: gasestimates_execute
+            description: ""
             data_type: STRING
           - name: networkid
+            description: ""
             data_type: FLOAT64
           - name: infourl
+            description: ""
             data_type: STRING
           - name: gasestimates_executel1
+            description: ""
             data_type: STRING
           - name: chain
+            description: ""
             data_type: STRING
           - name: asset_key
+            description: ""
             data_type: STRING
           - name: asset_symbol
+            description: ""
             data_type: STRING
           - name: asset_mainnetequivalent
+            description: ""
             data_type: STRING
           - name: asset_decimals
+            description: ""
             data_type: FLOAT64
           - name: asset_coingeckoid
+            description: ""
             data_type: STRING
           - name: asset_name
+            description: ""
             data_type: STRING
           - name: asset_issingleminter
+            description: ""
+            data_type: STRING
+          - name: gasestimates_proveandprocess
+            data_type: STRING
+          - name: gasestimates_messaging
+            data_type: STRING
+          - name: gasestimates_proveandprocessl1
             data_type: STRING
       - name: raw_source_defilamma_bridges_history_wallets
         identifier: source_defilamma_bridges_history_wallets
@@ -1008,3 +1059,7 @@ sources:
             data_type: STRING
           - name: upload_timestamp
             data_type: TIMESTAMP
+      - name: raw_dim_connext_routers_name
+        identifier: dim_connext_routers_name
+      - name: raw_stg__ninja_connext_prod_chains_tokens_clean
+        identifier: stg__ninja_connext_prod_chains_tokens_clean

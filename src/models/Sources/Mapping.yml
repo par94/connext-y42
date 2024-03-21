@@ -77,3 +77,16 @@ sources:
             group: null
             supported_sync_modes:
               - full_refresh
+        columns:
+          - name: chain
+            data_type: STRING
+          - name: contract_author
+            data_type: STRING
+          - name: contract_name
+            data_type: STRING
+          - name: description
+            data_type: STRING
+          - name: xcall_caller
+            data_type: STRING
+          - name: _y42_extracted_at
+            data_type: TIMESTAMP
