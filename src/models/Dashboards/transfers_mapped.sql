@@ -1,11 +1,11 @@
 WITH ttt AS (
 SELECT
-    odm.name AS origin_domain_name,
-    ddm.name AS destination_domain_name,
-    otam.`assetid_symbol` AS origin_asset_name,
-    otam.`assetid_decimals` AS origin_asset_decimals,
-    dtam.`assetid_symbol` AS destination_asset_name,
-    dtam.`assetid_decimals` AS destination_asset_decimals,
+    COALESCE(odm.name,t.origin_domain) AS origin_domain_name,
+    COALESCE(ddm.name,t.`destination_domain`) AS destination_domain_name,
+    COALESCE(otam.`assetid_symbol`,t.`origin_transacting_asset`)  AS origin_asset_name,
+    COALESCE(otam.`assetid_decimals`, NULL) AS origin_asset_decimals,
+    COALESCE(dtam.`assetid_symbol`,t.`destination_transacting_asset`) AS destination_asset_name,
+    COALESCE(dtam.`assetid_decimals`, NULL) AS destination_asset_decimals,
     t.*
 FROM {{ ref('transfers') }} AS t
 LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS odm ON t.`origin_domain` = odm.`domainid`
