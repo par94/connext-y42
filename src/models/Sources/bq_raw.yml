@@ -1061,6 +1061,11 @@ sources:
             data_type: TIMESTAMP
       - name: raw_dim_connext_routers_name
         identifier: dim_connext_routers_name
+        columns:
+          - name: router
+            data_type: STRING
+          - name: name
+            data_type: STRING
       - name: raw_stg__ninja_connext_prod_chains_tokens_clean
         identifier: stg__ninja_connext_prod_chains_tokens_clean
         columns:
