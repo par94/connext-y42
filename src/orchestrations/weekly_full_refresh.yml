@@ -5,4 +5,4 @@ orchestrations:
     config:
       enabled: true
       command: y42 build --exclude slippage_historical --full-refresh
-      cron: 0 0 * * *
+      cron: 0 1 * * SUN
