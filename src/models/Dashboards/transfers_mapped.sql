@@ -1,3 +1,5 @@
+--TO DO
+--Missing assets
 WITH ttt AS (
 SELECT
     COALESCE(odm.name,t.origin_domain) AS origin_domain_name,
