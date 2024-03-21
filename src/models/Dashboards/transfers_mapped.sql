@@ -11,7 +11,7 @@ SELECT
     COALESCE(dtam.`assetid_symbol`,t.`destination_transacting_asset`) AS destination_asset_name,
     COALESCE(dtam.`assetid_decimals`, NULL) AS destination_asset_decimals,
     CASE WHEN LOWER(t.xcall_caller) != LOWER(t.xcall_tx_origin) THEN 'Contract' ELSE 'EOA' END AS caller_type,
-    cc.*,
+    cc.* EXCEPT (xcall_caller),
     t.*
 FROM {{ ref('transfers') }} AS t
 LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS odm ON t.`origin_domain` = odm.`domainid`
