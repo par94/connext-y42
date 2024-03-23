@@ -6,11 +6,12 @@ WITH ttt AS (
 SELECT
     COALESCE(odm.name,t.origin_domain) AS origin_domain_name,
     COALESCE(ddm.name,t.`destination_domain`) AS destination_domain_name,
-    COALESCE(otam.`assetid_symbol`,t.`origin_transacting_asset`)  AS origin_asset_name,
+    COALESCE(otam.`assetid_symbol`, dtam.`assetid_symbol`, t.`origin_transacting_asset`)  AS origin_asset_name,
     COALESCE(otam.`assetid_decimals`, NULL) AS origin_asset_decimals,
-    COALESCE(dtam.`assetid_symbol`,t.`destination_transacting_asset`) AS destination_asset_name,
+    COALESCE(dtam.`assetid_symbol`, otam.`assetid_symbol`, t.`destination_transacting_asset`) AS destination_asset_name,
     COALESCE(dtam.`assetid_decimals`, NULL) AS destination_asset_decimals,
     CASE WHEN LOWER(t.xcall_caller) != LOWER(t.xcall_tx_origin) THEN 'Contract' ELSE 'EOA' END AS caller_type,
+    t.destination_transacting_amount, 
     cc.* EXCEPT (xcall_caller, rn),
     t.*
 FROM {{ ref('transfers') }} AS t
