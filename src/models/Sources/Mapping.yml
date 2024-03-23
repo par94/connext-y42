@@ -90,3 +90,5 @@ sources:
             data_type: STRING
           - name: _y42_extracted_at
             data_type: TIMESTAMP
+    tags:
+      - liquidity
