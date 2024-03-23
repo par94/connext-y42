@@ -10,38 +10,92 @@ WITH connext_tokens AS (
   FROM {{ source('bq_stage', 'stage_connext_tokens') }} ct
 ),
 
-ttt AS (
+connext_contracts AS (
+    SELECT 
+        LOWER(xcall_caller) AS xcall_caller,
+        * EXCEPT (xcall_caller)
+    FROM (
+            SELECT *,
+                ROW_NUMBER() OVER (PARTITION BY `xcall_caller` ORDER BY `contract_name`) AS rn
+            FROM {{ source('Mapping', 'contracts') }}
+        ) AS subquery
+    WHERE rn = 1
+),
+
+transfers_mapping AS (
     SELECT
-    COALESCE(odm.name,t.origin_domain) AS origin_domain_name,
-    COALESCE(ddm.name,t.`destination_domain`) AS destination_domain_name,
-    COALESCE(otam.`assetid_symbol`, dtam.`assetid_symbol`, cc_origin.token_name, t.`origin_transacting_asset`)  AS origin_asset_name,
-    COALESCE(otam.`assetid_decimals`, NULL) AS origin_asset_decimals,
-    COALESCE(dtam.`assetid_symbol`, otam.`assetid_symbol`, cc_destination.token_name, t.`destination_transacting_asset`) AS destination_asset_name,
-    COALESCE(dtam.`assetid_decimals`, NULL) AS destination_asset_decimals,
-    CAST(cc_origin.is_xerc20 AS BOOL) AS is_origin_asset_xerc20,
-    CAST(cc_destination.is_xerc20 AS BOOL) AS is_destination_asset_xerc20,
+    COALESCE(om.domain_name, t.origin_domain) AS origin_domain_name,
+    COALESCE(dm.domain_name, t.`destination_domain`) AS destination_domain_name,
+    COALESCE(om.asset_name, dm.asset_name, t.`origin_transacting_asset`)  AS origin_asset_name,
+    COALESCE(om.`asset_decimals`, NULL) AS origin_asset_decimals,
+    COALESCE(dm.`asset_name`, om.`asset_name`, t.`destination_transacting_asset`) AS destination_asset_name,
+    COALESCE(dm.`asset_decimals`, NULL) AS destination_asset_decimals,
+    CAST(om.is_xerc20 AS BOOL) AS is_origin_asset_xerc20,
+    CAST(dm.is_xerc20 AS BOOL) AS is_destination_asset_xerc20,
+    om.asset_type AS origin_asset_type,
+    dm.asset_type AS destination_asset_type,
     CASE WHEN LOWER(t.xcall_caller) != LOWER(t.xcall_tx_origin) THEN 'Contract' ELSE 'EOA' END AS caller_type,
     --t.destination_transacting_amount, 
     cc.* EXCEPT (xcall_caller, rn),
     t.*
     FROM {{ ref('transfers') }} AS t
+    LEFT JOIN {{ ref('token_mapping') }} AS om ON t.`origin_transacting_asset` = om.`asset` AND t.`origin_domain` = om.`domain`
+    LEFT JOIN {{ ref('token_mapping') }} AS dm ON t.`destination_transacting_asset` = dm.`asset` AND t.`destination_domain` = dm.`domain`
+    LEFT JOIN connext_contracts AS cc ON t.`xcall_caller` = cc.`xcall_caller`
+    /*
     LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS odm ON t.`origin_domain` = odm.`domainid`
     LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS ddm ON t.`destination_domain` = ddm.`domainid`
     LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS otam ON t.`origin_transacting_asset` = otam.`assetid` AND t.`origin_domain` = otam.`domainid`
     LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS dtam ON t.`destination_transacting_asset` = dtam.`assetid`AND t.`destination_domain` = dtam.`domainid`
     LEFT JOIN connext_tokens AS cc_origin ON t.origin_transacting_asset = cc_origin.token_address
     LEFT JOIN connext_tokens AS cc_destination ON t.destination_transacting_asset = cc_destination.token_address
-    LEFT JOIN (
-        SELECT 
-        LOWER(xcall_caller) AS xcall_caller,
-        * EXCEPT (xcall_caller)
-        FROM (
-            SELECT *,
-                ROW_NUMBER() OVER (PARTITION BY `xcall_caller` ORDER BY `contract_name`) AS rn
-            FROM {{ source('Mapping', 'contracts') }}
-        ) AS subquery
-        WHERE rn = 1
-        ) AS cc ON t.`xcall_caller` = cc.`xcall_caller`
-)
+    */
+),
 
-SELECT * FROM ttt -- WHERE (destination_transacting_asset IS NOT NULL and destination_asset_name IS NULL) OR (origin_transacting_asset IS NOT NULL and origin_asset_name IS NULL)
+transfers_amounts AS (
+    Select 
+    CAST(origin_transacting_amount AS NUMERIC) / POWER(10, origin_asset_decimals) as origin_amount,
+    CAST(destination_transacting_amount AS NUMERIC) * POWER(10, 18 - destination_asset_decimals) as normalized_out,
+    CAST(destination_transacting_amount AS NUMERIC) / POWER(10, destination_asset_decimals) as destination_amount,
+    CAST(bridged_amt AS NUMERIC) / POWER(10, decimals) as bridged_amount,
+    * 
+    from transfers_mapping
+),
+--Fixing ezETH pricing
+ezeth_price_fix AS (
+  SELECT * EXCEPT(asset_usd_price, usd_amount),
+    CASE
+      WHEN (t1.origin_asset_name = 'ezeth' or t1.destination_asset_name = 'ezeth') AND t1.asset_usd_price = 0 THEN t2.eth_price
+      ELSE t1.asset_usd_price
+    END AS asset_usd_price,
+    CASE
+      WHEN (t1.origin_asset_name = 'ezeth' or t1.destination_asset_name = 'ezeth') AND t1.asset_usd_price = 0
+      --t1.asset = 'ezeth' OR (t1.asset = 'weth' AND (t1.asset_price = 0)) 
+      THEN t2.eth_price * destination_amount
+      ELSE t1.usd_amount
+    END AS usd_amount,
+  FROM transfers_amounts t1
+  CROSS JOIN (
+    SELECT asset_usd_price as ETH_price
+    FROM transfers_amounts
+    WHERE origin_asset_name = 'weth' and asset_usd_price > 0
+    ORDER BY xcall_timestamp DESC
+    LIMIT 1  -- Replace 'ETH' with the asset you want to use for the price
+  ) t2
+),
+
+ttt AS (select * from ezeth_price_fix)
+
+SELECT * FROM TTT
+
+/*
+SELECT --origin_domain_name, 
+origin_asset_name, 
+--destination_domain_name, 
+destination_asset_name, 
+sum(destination_amount) as s, sum(CAST(destination_transacting_amount AS numeric)) as ss, sum(CAST(usd_amount AS numeric)) as sss, count(*) as c
+FROM ttt where xcall_date >= '2024-01-01' AND CAST(destination_transacting_amount AS numeric) != 0
+ group by 1,2--,3,4 
+ order by count(*) desc
+ -- WHERE (destination_transacting_asset IS NOT NULL and destination_asset_name IS NULL) OR (origin_transacting_asset IS NOT NULL and origin_asset_name IS NULL)
+ */
