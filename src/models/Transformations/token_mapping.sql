@@ -6,6 +6,18 @@ WITH connext_tokens AS (
     FROM {{ source('bq_stage', 'stage_connext_tokens') }} AS ct
 ),
 
+assets_tr AS (
+    SELECT
+    *,
+    ROW_NUMBER() OVER (PARTITION BY domain, id ORDER BY adopted_decimal desc) AS rn
+  FROM {{ source('Cartographer', 'public_assets') }}
+    
+),
+
+assets_fix AS (
+    SELECT * FROM assets_tr WHERE rn = 1
+),
+
 fj AS (
     SELECT *
     FROM {{ source('Cartographer', 'public_assets') }} AS pa
@@ -109,14 +121,24 @@ mapping AS (
     LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS tam ON t.`asset` = tam.`assetid` AND t.`domain` = tam.`domainid`
     --LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS dtam ON t.`destination_transacting_asset` = dtam.`assetid` AND t.`destination_domain` = dtam.`domainid`
     LEFT JOIN connext_tokens AS cc ON t.asset = cc.token_address
-    LEFT JOIN {{ source('Cartographer', 'public_assets') }} AS pa ON t.`domain` = pa.`domain` AND t.`asset` = pa.`id`
+    LEFT JOIN (SELECT DISTINCT * FROM assets_fix) AS pa ON t.`domain` = pa.`domain` AND t.`asset` = pa.`id`
     --LEFT JOIN connext_tokens AS cc_destination ON t.destination_transacting_asset = cc_destination.token_address
     --WHERE tam.`assetid_decimals` is NOT NULL AND tam.`assetid_decimals` != `asset_decimals`
     ORDER BY t.`domain`, t.`asset`
 )
 
-SELECT * FROM mapping
---SELECT count(*) FROM combinations
+select * from mapping --WHERE asset in ('0x68deff5c5c132467316522b0a66436573abba80e', '0xe974b9b31dbff4369b94a1bab5e228f35ed44125', '0x27b58d226fe8f792730a795764945cf146815aa7')
+
+
+--SELECT domain, asset, count(*) as count FROM mapping group by 1,2 order by (count(*)) desc
+
+--SELECT domain, id, count(*) as co FROM {{ source('Cartographer', 'public_assets') }} group by 1,2 order by (count(*)) desc
+
+--SELECT * FROM {{ source('Cartographer', 'public_assets') }} where id in ('0x68deff5c5c132467316522b0a66436573abba80e', '0xe974b9b31dbff4369b94a1bab5e228f35ed44125', '0x27b58d226fe8f792730a795764945cf146815aa7')
+
+--SELECT * FROM combinations where asset in ('0x68deff5c5c132467316522b0a66436573abba80e', '0xe974b9b31dbff4369b94a1bab5e228f35ed44125', '0x27b58d226fe8f792730a795764945cf146815aa7')
+
+--combinations
 --SELECT * FROM {{ source('Cartographer', 'public_assets') }} WHERE `adopted` != id AND `local` != id
 
 --distinct canonical_id, asset_name FROM mapping order by canonical_id
