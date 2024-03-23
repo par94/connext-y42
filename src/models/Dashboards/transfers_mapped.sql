@@ -19,7 +19,9 @@ LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS ddm ON
 LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS otam ON t.`origin_transacting_asset` = otam.`assetid` AND t.`origin_domain` = otam.`domainid`
 LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS dtam ON t.`destination_transacting_asset` = dtam.`assetid`AND t.`destination_domain` = dtam.`domainid`
 LEFT JOIN (
-    SELECT *
+    SELECT 
+    LOWER(xcall_caller) AS xcall_caller,
+    * EXCEPT (xcall_caller)
     FROM (
         SELECT *,
             ROW_NUMBER() OVER (PARTITION BY `xcall_caller` ORDER BY `contract_name`) AS rn
