@@ -18,6 +18,15 @@ LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS odm ON
 LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS ddm ON t.`destination_domain` = ddm.`domainid`
 LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS otam ON t.`origin_transacting_asset` = otam.`assetid` AND t.`origin_domain` = otam.`domainid`
 LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS dtam ON t.`destination_transacting_asset` = dtam.`assetid`AND t.`destination_domain` = dtam.`domainid`
-LEFT JOIN {{ source('Mapping', 'contracts') }} AS cc ON t.`xcall_caller` = cc.`xcall_caller`
+LEFT JOIN (
+    SELECT *
+    FROM (
+        SELECT *,
+            ROW_NUMBER() OVER (PARTITION BY `xcall_caller` ORDER BY `contract_name`) AS rn
+        FROM {{ source('Mapping', 'contracts') }}
+    ) AS subquery
+    WHERE rn = 1
+    ) AS cc ON t.`xcall_caller` = cc.`xcall_caller`
 )
+
 SELECT * FROM ttt -- WHERE (destination_transacting_asset IS NOT NULL and destination_asset_name IS NULL) OR (origin_transacting_asset IS NOT NULL and origin_asset_name IS NULL)
