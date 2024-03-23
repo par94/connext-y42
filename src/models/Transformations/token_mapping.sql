@@ -52,38 +52,76 @@ origin_mapped AS (
 ),
 
 combinations AS (
-    SELECT DISTINCT domain, asset
+    SELECT DISTINCT
+        domain,
+        asset
     FROM (
-        SELECT origin_domain AS domain, origin_transacting_asset AS asset
+        SELECT
+            origin_domain AS domain,
+            origin_transacting_asset AS asset
         FROM {{ ref('transfers') }}
 
         UNION ALL
 
-        SELECT destination_domain AS domain, destination_transacting_asset AS asset
+        SELECT
+            destination_domain AS domain,
+            destination_transacting_asset AS asset
         FROM {{ ref('transfers') }}
     ) AS combined
     WHERE asset IS NOT NULL
 ),
+
 mapping AS (
- SELECT 
-t.*,
-dm.name as domain_name,
-tam.assetid_symbol as asset_name,
-cc.*,
-tam.*
-FROM combinations AS t
-LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS dm ON t.`domain` = dm.`domainid`
---LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS ddm ON t.`destination_domain` = ddm.`domainid`
-LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS tam ON t.`asset` = tam.`assetid` AND t.`domain` = tam.`domainid`
---LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS dtam ON t.`destination_transacting_asset` = dtam.`assetid` AND t.`destination_domain` = dtam.`domainid`
-LEFT JOIN connext_tokens AS cc ON t.asset = cc.token_address
---LEFT JOIN connext_tokens AS cc_destination ON t.destination_transacting_asset = cc_destination.token_address
-WHERE tam.assetid_symbol is NULL AND cc.`token_name` is NULL 
-ORDER BY `domain`, `asset`
+    SELECT
+        t.*,
+        dm.name AS domain_name,
+        COALESCE(tam.assetid_symbol, LOWER(cc.`token_name`)) AS asset_name,
+        COALESCE(CAST(tam.assetid_decimals AS NUMERIC), pa.`decimal`) AS asset_decimals,
+        tam.assetid_mainnetequivalent AS mainnet_equivalent,
+        CASE
+            WHEN
+                pa.id = pa.`local`
+                AND STARTS_WITH(COALESCE(tam.assetid_symbol, LOWER(cc.`token_name`)), 'next')
+                AND CAST(cc.is_xerc20 AS BOOLEAN) IS FALSE
+                THEN 'local'
+            WHEN
+                pa.id = pa.`adopted` AND NOT STARTS_WITH(COALESCE(tam.assetid_symbol, LOWER(cc.`token_name`)), 'next')
+                THEN 'adopted'
+            WHEN
+                pa.id IS NULL
+                AND STARTS_WITH(COALESCE(tam.assetid_symbol, LOWER(cc.`token_name`)), 'next')
+                AND CAST(cc.is_xerc20 AS BOOLEAN) IS FALSE
+                THEN 'local'
+            WHEN
+                pa.id IS NULL
+                AND (
+                    NOT STARTS_WITH(COALESCE(tam.assetid_symbol, LOWER(cc.`token_name`)), 'next')
+                    OR CAST(cc.is_xerc20 AS BOOLEAN) IS TRUE
+                )
+                THEN 'adopted'
+        --ELSE "adopted"
+        END AS asset_type,
+        CAST(cc.`is_xerc20` AS BOOLEAN) AS is_xerc20,
+        pa.* EXCEPT (domain)
+    FROM combinations AS t
+    LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS dm ON t.`domain` = dm.`domainid`
+    --LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS ddm ON t.`destination_domain` = ddm.`domainid`
+    LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS tam ON t.`asset` = tam.`assetid` AND t.`domain` = tam.`domainid`
+    --LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS dtam ON t.`destination_transacting_asset` = dtam.`assetid` AND t.`destination_domain` = dtam.`domainid`
+    LEFT JOIN connext_tokens AS cc ON t.asset = cc.token_address
+    LEFT JOIN {{ source('Cartographer', 'public_assets') }} AS pa ON t.`domain` = pa.`domain` AND t.`asset` = pa.`id`
+    --LEFT JOIN connext_tokens AS cc_destination ON t.destination_transacting_asset = cc_destination.token_address
+    --WHERE tam.`assetid_decimals` is NOT NULL AND tam.`assetid_decimals` != `asset_decimals`
+    ORDER BY t.`domain`, t.`asset`
 )
 
---SELECT count(*) FROM combinations
 SELECT * FROM mapping
+--SELECT count(*) FROM combinations
+--SELECT * FROM {{ source('Cartographer', 'public_assets') }} WHERE `adopted` != id AND `local` != id
+
+--distinct canonical_id, asset_name FROM mapping order by canonical_id
+--WHERE `assetid_decimals` is NOT NULL AND CAST(`assetid_decimals` AS Numeric) != `asset_decimals`
+--SELECT * FROM {{ source('bq_stage', 'stage_connext_tokens') }} --connext_tokens ORDER BY `token_name`
 
 
 --WHERE `destination_transacting_asset` is NOT NULL
