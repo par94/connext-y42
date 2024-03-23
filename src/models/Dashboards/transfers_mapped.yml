@@ -9,6 +9,8 @@ models:
     config:
       y42:
         apiVersion: v1
+      tags:
+        - liquidity
     columns:
       - name: origin_domain_name
         data_type: STRING
@@ -174,8 +176,8 @@ models:
         data_type: INT64
       - name: xcall_date
         data_type: STRING
-    description: This model refines transfer data by mapping domain names, asset names,
-      decimals, and caller types. It enriches the dataset by linking transfer
-      details with corresponding domain and asset information, distinguishing
-      between transactions initiated by contracts or externally owned accounts
-      (EOAs).
+    description: This model refines transfer data by mapping domain names, asset
+      names, decimals, and caller types. It enriches the dataset by linking
+      transfer details with corresponding domain and asset information,
+      distinguishing between transactions initiated by contracts or externally
+      owned accounts (EOAs).
