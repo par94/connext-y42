@@ -1,11 +1,64 @@
 --fix pricing
+WITH router_mapping AS (
 SELECT 
-    COALESCE(dm.name, rwb.`asset_domain`) AS destination_domain_name,
-    COALESCE(tam.`assetid_symbol`, rwb.`adopted`)  AS adopted_asset_name,
-    COALESCE(CAST(tam.`assetid_decimals` AS NUMERIC), rwb.`adopted_decimal`)  AS adopted_asset_decimal,
+    COALESCE(tm.domain_name, rwb.`asset_domain`) AS destination_domain_name,
+    COALESCE(tm.`asset_name`, rwb.`adopted`)  AS asset_name,
+    --COALESCE(CAST(tam.`assetid_decimals` AS NUMERIC), rwb.`adopted_decimal`)  AS adopted_asset_decimal,
     COALESCE(rm.`name`, rwb.`router_address`)  AS router_name,
     rwb.*
 FROM {{ source('Cartographer', 'public_routers_with_balances') }} AS rwb
+LEFT JOIN {{ ref('token_mapping') }} AS tm ON rwb.`asset_domain` = tm.`domain` AND rwb.`adopted` = tm.`asset`
+--rwb.`asset_canonical_id` = tm.`canonical_id`
+LEFT JOIN {{ source('bq_raw', 'raw_dim_connext_routers_name') }} AS rm ON LOWER(rwb.`router_address`) = LOWER(rm.`router`)
+),
+price_fix AS (
+  SELECT 
+  CASE
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt') AND (t1.asset_usd_price = 0) THEN 1
+      WHEN t1.asset_name in ('ezeth','weth') AND (t1.asset_usd_price = 0) THEN t2.eth_price
+      ELSE t1.asset_usd_price
+    END AS asset_usd_price,
+    CASE
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt') AND (t1.asset_usd_price = 0) THEN t1.balance / power(10, decimal)
+      WHEN t1.asset_name in ('ezeth','weth') AND (t1.asset_usd_price = 0) THEN t1.balance / power(10, decimal) * t2.eth_price
+      ELSE t1.balance_usd
+    END AS balance_usd,
+    CASE
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt') AND (t1.asset_usd_price = 0) THEN t1.locked / power(10, decimal)
+      WHEN t1.asset_name in ('ezeth','weth') AND (t1.asset_usd_price = 0) THEN t1.locked / power(10, decimal) * t2.eth_price
+      ELSE t1.locked_usd
+    END AS locked_usd,
+    CASE
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt') AND (t1.asset_usd_price = 0) THEN t1.removed / power(10, decimal)
+      WHEN t1.asset_name in ('ezeth','weth') AND (t1.asset_usd_price = 0) THEN t1.removed / power(10, decimal) * t2.eth_price
+      ELSE t1.removed_usd
+    END AS removed_usd,
+    CASE
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt') AND (t1.asset_usd_price = 0) THEN t1.supplied / power(10, decimal)
+      WHEN t1.asset_name in ('ezeth','weth') AND (t1.asset_usd_price = 0) THEN t1.supplied / power(10, decimal) * t2.eth_price
+      ELSE t1.supplied_usd
+    END AS supplied_usd,
+    CASE
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt') AND (t1.asset_usd_price = 0) THEN t1.fees_earned / power(10, decimal)
+      WHEN t1.asset_name in ('ezeth','weth') AND (t1.asset_usd_price = 0) THEN t1.fees_earned / power(10, decimal) * t2.eth_price
+      ELSE t1.fee_earned_usd
+    END AS fee_earned_usd,
+  * EXCEPT (asset_usd_price, balance_usd, locked_usd, removed_usd, supplied_usd, fee_earned_usd)
+  FROM router_mapping t1
+  CROSS JOIN (
+    SELECT asset_usd_price as ETH_price
+    FROM {{ ref('transfers_mapped') }}
+    WHERE origin_asset_name = 'weth' and asset_usd_price > 0
+    ORDER BY xcall_timestamp DESC
+    LIMIT 1
+  ) t2
+)
+
+SELECT * FROM price_fix
+
+--WHERE `asset_usd_price` = 0 AND balance > 0 --AND tm.`asset_name` = 'weth'
+--WHERE tm.`asset_name` is NULL
+/*
 LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS dm ON rwb.`asset_domain` = dm.`domainid`
 LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS tam ON rwb.`adopted` = tam.`assetid` AND rwb.`asset_domain` = tam.`domainid`
-LEFT JOIN {{ source('bq_raw', 'raw_dim_connext_routers_name') }} AS rm ON rwb.`router_address` = rm.`router`
+*/
