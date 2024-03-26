@@ -65,11 +65,11 @@ transfers_amounts AS (
 ezeth_price_fix AS (
   SELECT * EXCEPT(asset_usd_price, usd_amount),
     CASE
-      WHEN (t1.origin_asset_name = 'ezeth' or t1.destination_asset_name = 'ezeth') AND t1.asset_usd_price = 0 THEN t2.eth_price
+      WHEN (t1.origin_asset_name in ('ezeth','weth') or t1.destination_asset_name in ('ezeth','weth')) AND t1.asset_usd_price = 0 THEN t2.eth_price
       ELSE t1.asset_usd_price
     END AS asset_usd_price,
     CASE
-      WHEN (t1.origin_asset_name = 'ezeth' or t1.destination_asset_name = 'ezeth') AND t1.asset_usd_price = 0
+      WHEN (t1.origin_asset_name in ('ezeth','weth') or t1.destination_asset_name in ('ezeth','weth')) AND t1.asset_usd_price = 0
       --t1.asset = 'ezeth' OR (t1.asset = 'weth' AND (t1.asset_price = 0)) 
       THEN t2.eth_price * destination_amount
       ELSE t1.usd_amount
