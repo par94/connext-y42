@@ -1,4 +1,5 @@
-SELECT *,   CASE
+SELECT *,   
+CASE
         WHEN routers = '{0x9584eb0356a380b25d7ed2c14c54de58a25f2581}' THEN 'Mike Nai'
         WHEN routers = '{0xc4ae07f276768a3b74ae8c47bc108a2af0e40eba}' THEN 'P2P 2'
         WHEN routers = '{0xeca085906cb531bdf1f87efa85c5be46aa5c9d2c}' THEN 'Blocktech 2'
@@ -17,4 +18,5 @@ SELECT *,   CASE
         WHEN routers = '{0x6892d4D1f73A65B03063B7d78174dC6350Fcc406}' THEN 'Unagii'
         WHEN routers = '{0x32d63da9f776891843c90787cec54ada23abd4c2}' THEN 'Ingag'
         WHEN routers = '{0xfaab88015477493cfaa5dfaa533099c590876f21}' THEN 'Paradox'
-    END AS router_name FROM {{ source('Mapping', 'routers') }}
+    END AS router_name 
+  FROM {{ source('Mapping', 'routers') }}
