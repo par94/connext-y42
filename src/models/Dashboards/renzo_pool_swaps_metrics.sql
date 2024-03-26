@@ -10,6 +10,7 @@ SELECT
         WHEN domain = '1818848877' THEN 'Linea'
         WHEN domain = '1835365481' THEN 'Metis'
         WHEN domain = '1650553709' THEN 'Base'
+        WHEN domain = '1836016741' THEN 'Mode'
         ELSE
             domain
     END
@@ -23,6 +24,8 @@ WHERE
     (
         domain = '1634886255'
         OR domain = '6450786'
+        OR domain = '1818848877'
+        OR domain = '1836016741'
     )
     AND timestamp > 1709190000
     AND pool_id = '0x12acadfa38ab02479ae587196a9043ee4d8bf52fcb96b7f8d2ba240f03bcd08a'
