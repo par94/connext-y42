@@ -42,7 +42,7 @@ pools_tvl_usd AS (
   SELECT
     DISTINCT
     sp.key AS pool_id,
-    sp.chain,
+    sp.token_2 as asset,
     assets.canonical_id,
     sp.domain,
     ct_1.domain_name,
@@ -88,21 +88,21 @@ RouterVolume AS (
     COALESCE(pr.domain_name, rmt.destination_domain_name) as domain_name,
     SUM(usd_volume_1d) AS usd_volume_last_1_day,
     SUM(usd_volume_7d) AS usd_volume_last_7_days,
-    SUM(usd_volume_30_days) AS usd_volume_last_30_days,
+    SUM(usd_volume_30d) AS usd_volume_last_30_days,
     SUM(volume_1d) AS volume_1_day,
     SUM(volume_7d) AS volume_7_days,
     SUM(volume_30d) AS volume_30_days,
-    SUM(fast_usd_volume_1d) AS fast_usd_volume_1_day,
-    SUM(fast_usd_volume_7d) AS fast_usd_volume_7_days,
-    SUM(fast_usd_volume_30d) AS fast_usd_volume_30_days,
+    SUM(usd_fast_volume_1d) AS fast_usd_volume_1_day,
+    SUM(usd_fast_volume_7d) AS fast_usd_volume_7_days,
+    SUM(usd_fast_volume_30d) AS fast_usd_volume_30_days,
     SUM(fast_volume_1d) AS fast_volume_1_day,
     SUM(fast_volume_7d) AS fast_volume_7_days,
     SUM(fast_volume_30d) AS fast_volume_30_days,
-    MAX(CAST(rmt.last_txn_date as DATE)) AS last_txn_date,
-    SUM(CASE WHEN CAST(rmt.last_txn_date as DATE) <= DATE_SUB(CURRENT_DATE(), INTERVAL 5 DAY) THEN rmt.balance_usd ELSE 0 END) AS inactive_balance_usd,
-    SUM(CASE WHEN CAST(rmt.last_txn_date as DATE) <= DATE_SUB(CURRENT_DATE(), INTERVAL 5 DAY) THEN rmt.locked_usd ELSE 0 END) AS inactive_locked_usd,
-    SUM(CASE WHEN CAST(rmt.last_txn_date as DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 5 DAY) THEN rmt.balance_usd ELSE 0 END) AS active_balance_usd,
-    SUM(CASE WHEN CAST(rmt.last_txn_date as DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 5 DAY) THEN rmt.locked_usd ELSE 0 END) AS active_locked_usd,
+    MAX(CAST(rmt.last_transfer_date as DATE)) AS last_txn_date,
+    SUM(CASE WHEN CAST(rmt.last_transfer_date as DATE) <= DATE_SUB(CURRENT_DATE(), INTERVAL 5 DAY) THEN rmt.balance_usd ELSE 0 END) AS inactive_balance_usd,
+    SUM(CASE WHEN CAST(rmt.last_transfer_date as DATE) <= DATE_SUB(CURRENT_DATE(), INTERVAL 5 DAY) THEN rmt.locked_usd ELSE 0 END) AS inactive_locked_usd,
+    SUM(CASE WHEN CAST(rmt.last_transfer_date as DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 5 DAY) THEN rmt.balance_usd ELSE 0 END) AS active_balance_usd,
+    SUM(CASE WHEN CAST(rmt.last_transfer_date as DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 5 DAY) THEN rmt.locked_usd ELSE 0 END) AS active_locked_usd,
     SUM(rmt.balance_usd) AS total_balance_usd,
     SUM(rmt.locked_usd) AS total_locked_usd,
     SUM(rmt.balance/POWER(10,rmt.adopted_decimal)) AS total_balance_asset,
@@ -112,7 +112,7 @@ RouterVolume AS (
     SUM(usd_volume_30d)/SUM(rmt.locked_usd) AS utilization_last_30_days,
     MAX(pr.usd_pool_1_amount) as usd_pool_1_amount,
     MAX(pr.usd_pool_2_amount) as usd_pool_2_amount,
-    MAX(pr.pool_balance) as pool_balance
+    MAX(pr.usd_pool_1_amount) + MAX(pr.usd_pool_2_amount) as pool_balance
   FROM 
     pools_tvl_usd pr
     FULL OUTER JOIN 
@@ -120,4 +120,4 @@ RouterVolume AS (
   GROUP BY 1,2
 )
 
-SELECT * FROM RouterVolume
+SELECT * FROM RouterVolume order by usd_volume_last_30_days desc
