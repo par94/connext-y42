@@ -47,7 +47,9 @@ WITH VolumeMetrics AS (
       1,2,3,4,5 
 ),
 RouterMapping AS (
-  SELECT *,
+  SELECT 
+  tm.*,
+  rm.* EXCEPT(destination_domain_name)
   FROM VolumeMetrics tm
   LEFT JOIN {{ ref('routers_with_balances_mapped') }} rm
     ON tm.`destination_domain` = rm.`domain`
