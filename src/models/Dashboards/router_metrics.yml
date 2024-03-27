@@ -11,3 +11,4 @@ models:
         apiVersion: v1
       tags:
         - dashboard
+        - liquidity

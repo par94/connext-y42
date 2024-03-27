@@ -17,7 +17,10 @@ def github_parser_chains(context) -> pd.DataFrame:
     url = "https://github.com/connext/chaindata/blob/main/crossChain.json"
 
     response = requests.get(url)
-    #logging.info(response)
+    logging.info(response)
+
+    logging.info(response.content)
+
     data = json.loads(response.content)
     #logging.info(data)
     data_clean = data['payload']['blob']['rawLines']
