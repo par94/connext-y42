@@ -1,4 +1,4 @@
-SELECT *,   
+/*SELECT *,   
 CASE
         WHEN routers = '{0x9584eb0356a380b25d7ed2c14c54de58a25f2581}' THEN 'Mike Nai'
         WHEN routers = '{0xc4ae07f276768a3b74ae8c47bc108a2af0e40eba}' THEN 'P2P 2'
@@ -20,3 +20,42 @@ CASE
         WHEN routers = '{0xfaab88015477493cfaa5dfaa533099c590876f21}' THEN 'Paradox'
     END AS router_name 
   FROM {{ source('Mapping', 'routers') }}
+  */
+WITH VolumeMetrics AS (
+  SELECT
+    tm.routers,
+    tm.destination_asset_name,
+    tm.`destination_transacting_asset`,
+    tm.destination_domain_name,
+    tm.`destination_domain`,
+    SUM(CASE WHEN CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) THEN usd_amount ELSE 0 END) AS usd_volume_1d,
+    SUM(CASE WHEN CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) THEN usd_amount ELSE 0 END) AS usd_volume_7d,
+    SUM(CASE WHEN CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY) THEN usd_amount ELSE 0 END) AS usd_volume_30d,
+    SUM(CASE WHEN CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) THEN destination_amount ELSE 0 END) AS volume_1d,
+    SUM(CASE WHEN CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) THEN destination_amount ELSE 0 END) AS volume_7d,
+    SUM(CASE WHEN CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY) THEN destination_amount ELSE 0 END) AS volume_30d,
+    SUM(CASE WHEN CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) AND status = 'CompletedFast' THEN usd_amount ELSE 0 END) AS usd_fast_volume_1d,
+    SUM(CASE WHEN CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) AND status = 'CompletedFast' THEN usd_amount ELSE 0 END) AS usd_fast_volume_7d,
+    SUM(CASE WHEN CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY) AND status = 'CompletedFast' THEN usd_amount ELSE 0 END) AS usd_fast_volume_30d,
+    SUM(CASE WHEN CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) AND status = 'CompletedFast' THEN destination_amount ELSE 0 END) AS fast_volume_1d,
+    SUM(CASE WHEN CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) AND status = 'CompletedFast' THEN destination_amount ELSE 0 END) AS fast_volume_7d,
+    SUM(CASE WHEN CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY) AND status = 'CompletedFast' THEN destination_amount ELSE 0 END) AS fast_volume_30d,
+    MAX(CAST(xcall_date AS DATE)) AS last_transfer_date
+    --COUNTIF(status = 'CompletedSlow') AS slow_txns
+    FROM {{ ref('transfers_mapped') }} tm
+    GROUP BY 
+      1,2,3,4,5 
+),
+RouterMapping AS (
+  SELECT * 
+  FROM VolumeMetrics tm
+  LEFT JOIN {{ ref('routers_with_balances_mapped') }} rm
+    ON tm.`destination_domain` = rm.`domain`
+    AND tm.`destination_transacting_asset` = rm.`adopted`
+    AND LOWER(
+      REPLACE((SELECT ARRAY_AGG(unnested_value LIMIT 1)[OFFSET(0)]
+      FROM UNNEST(JSON_EXTRACT_ARRAY(tm.`routers`)) AS unnested_value), '"', '')
+    ) = LOWER(rm.`address`)
+)
+
+SELECT * from RouterMapping
