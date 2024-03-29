@@ -11,3 +11,61 @@ models:
         apiVersion: v1
       tags:
         - liquidity
+        - dashboard
+    columns:
+      - name: asset_usd_price
+        data_type: FLOAT64
+      - name: balance_usd
+        data_type: FLOAT64
+      - name: locked_usd
+        data_type: FLOAT64
+      - name: removed_usd
+        data_type: FLOAT64
+      - name: supplied_usd
+        data_type: FLOAT64
+      - name: fee_earned_usd
+        data_type: FLOAT64
+      - name: destination_domain_name
+        data_type: STRING
+      - name: asset_name
+        data_type: STRING
+      - name: router_name
+        data_type: STRING
+      - name: address
+        data_type: STRING
+      - name: adopted
+        data_type: STRING
+      - name: adopted_decimal
+        data_type: FLOAT64
+      - name: asset_canonical_id
+        data_type: STRING
+      - name: asset_domain
+        data_type: STRING
+      - name: balance
+        data_type: FLOAT64
+      - name: canonical_domain
+        data_type: STRING
+      - name: canonical_id
+        data_type: STRING
+      - name: decimal
+        data_type: FLOAT64
+      - name: domain
+        data_type: STRING
+      - name: fees_earned
+        data_type: FLOAT64
+      - name: id
+        data_type: STRING
+      - name: key
+        data_type: STRING
+      - name: local
+        data_type: STRING
+      - name: locked
+        data_type: FLOAT64
+      - name: removed
+        data_type: FLOAT64
+      - name: router_address
+        data_type: STRING
+      - name: supplied
+        data_type: FLOAT64
+      - name: ETH_price
+        data_type: FLOAT64
