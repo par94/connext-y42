@@ -61,7 +61,7 @@ SELECT
     APPROX_QUANTILES(ttr, 100)[ORDINAL(95)] AS per95th_ttr,
     APPROX_QUANTILES(ttr, 100)[ORDINAL(99)] AS per99th_ttr
 FROM
-    {{ ref('transfers') }} AS tf
+    {{ ref('transfers_mapped') }} AS tf
 WHERE
     CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
 GROUP BY
