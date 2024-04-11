@@ -63,6 +63,6 @@ SELECT
 FROM
     {{ ref('transfers_mapped') }} AS tf
 WHERE
-    CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+    CAST(xcall_date AS DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 90 DAY)
 GROUP BY
     1, 2, 3, 4, 5, 6
