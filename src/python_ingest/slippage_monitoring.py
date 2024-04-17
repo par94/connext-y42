@@ -93,7 +93,7 @@ async def slippage_monitoring(context) -> pd.DataFrame:
         {
             "local": "0x0573ad07ca4f74757e5b2417bf225bebebcf66d9",
             "adopted": "0xe5d7c2a44fffdf6b295a15c148167daaaf5cf34f",
-            "endpoint": "https://linea-mainnet.blastapi.io/46b64ddd-127f-4145-b72d-3770f3927c96"
+            "endpoint": "https://linea-mainnet.infura.io/v3/7e94bd49053945d7bdc52884c58d9fe5"
         },
         "1836016741": #mode
         {
