@@ -100,6 +100,12 @@ async def slippage_monitoring(context) -> pd.DataFrame:
             "local": "0x609aefb9fb2ee8f2fdad5dc48efb8fa4ee0e80fb",
             "adopted": "0x4200000000000000000000000000000000000006",
             "endpoint": "https://mode-mainnet.blastapi.io/46b64ddd-127f-4145-b72d-3770f3927c96"
+        },
+        "1650553709": #base
+        {
+            "local": "0xE08D4907b2C7aa5458aC86596b6D17B1feA03F7E",
+            "adopted": "0x4200000000000000000000000000000000000006",
+            "endpoint": "https://base-mainnet.blastapi.io/46b64ddd-127f-4145-b72d-3770f3927c96"
         }
 
     }
