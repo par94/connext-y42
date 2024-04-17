@@ -128,6 +128,7 @@ async def slippage_monitoring(context) -> pd.DataFrame:
                 "timestamp": timestamp
             }
             temp_df = pd.DataFrame([combined_data])
+            logging.info(combined_data)
             df = pd.concat([df, temp_df])
 
     print(df)
