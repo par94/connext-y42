@@ -26,6 +26,13 @@ sources:
             group: null
             supported_sync_modes:
               - full_refresh
+        columns:
+          - name: router
+            data_type: STRING
+          - name: router_name
+            data_type: STRING
+          - name: _y42_extracted_at
+            data_type: TIMESTAMP
       - name: domains
         config:
           y42_table:

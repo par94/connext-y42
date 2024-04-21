@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: Router_monitoring
+    config:
+      y42_source:
+        type: python-ingest
+      y42:
+        apiVersion: v3
+    meta:
+      experts:
+        users:
+          - anton@connext.network
+    tables:
+      - name: Router_monitoring
