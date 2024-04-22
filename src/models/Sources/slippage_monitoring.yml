@@ -25,3 +25,19 @@ sources:
           - name: timestamp
             data_type: TIMESTAMP
       - name: router_monitoring
+        tags:
+          - dashboard
+          - liquidity
+        columns:
+          - name: origin_domain
+            data_type: STRING
+          - name: destination_domain
+            data_type: STRING
+          - name: token_address
+            data_type: STRING
+          - name: last_bid
+            data_type: STRING
+          - name: last_active
+            data_type: INTEGER
+          - name: router_address
+            data_type: STRING
