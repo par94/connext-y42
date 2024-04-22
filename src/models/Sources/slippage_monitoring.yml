@@ -24,3 +24,4 @@ sources:
             data_type: FLOAT
           - name: timestamp
             data_type: TIMESTAMP
+      - name: router_monitoring
