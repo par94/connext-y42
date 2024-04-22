@@ -14,33 +14,33 @@ LEFT JOIN {{ source('bq_raw', 'raw_dim_connext_routers_name') }} AS rm ON LOWER(
 price_fix AS (
   SELECT 
   CASE
-      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt') AND (t1.asset_usd_price = 0) THEN 1
-      WHEN t1.asset_name in ('ezeth','weth') AND (t1.asset_usd_price = 0) THEN t2.eth_price
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc') AND (t1.asset_usd_price = 0) THEN 1
+      WHEN t1.asset_name in ('ezeth','weth','aeth') AND (t1.asset_usd_price = 0) THEN t2.eth_price
       ELSE t1.asset_usd_price
     END AS asset_usd_price,
     CASE
-      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt') AND (t1.asset_usd_price = 0) THEN t1.balance / power(10, decimal)
-      WHEN t1.asset_name in ('ezeth','weth') AND (t1.asset_usd_price = 0) THEN t1.balance / power(10, decimal) * t2.eth_price
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc') AND (t1.asset_usd_price = 0) THEN t1.balance / power(10, decimal)
+      WHEN t1.asset_name in ('ezeth','weth','aeth') AND (t1.asset_usd_price = 0) THEN t1.balance / power(10, decimal) * t2.eth_price
       ELSE t1.balance_usd
     END AS balance_usd,
     CASE
-      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt') AND (t1.asset_usd_price = 0) THEN t1.locked / power(10, decimal)
-      WHEN t1.asset_name in ('ezeth','weth') AND (t1.asset_usd_price = 0) THEN t1.locked / power(10, decimal) * t2.eth_price
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc') AND (t1.asset_usd_price = 0) THEN t1.locked / power(10, decimal)
+      WHEN t1.asset_name in ('ezeth','weth','aeth') AND (t1.asset_usd_price = 0) THEN t1.locked / power(10, decimal) * t2.eth_price
       ELSE t1.locked_usd
     END AS locked_usd,
     CASE
-      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt') AND (t1.asset_usd_price = 0) THEN t1.removed / power(10, decimal)
-      WHEN t1.asset_name in ('ezeth','weth') AND (t1.asset_usd_price = 0) THEN t1.removed / power(10, decimal) * t2.eth_price
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc') AND (t1.asset_usd_price = 0) THEN t1.removed / power(10, decimal)
+      WHEN t1.asset_name in ('ezeth','weth','aeth') AND (t1.asset_usd_price = 0) THEN t1.removed / power(10, decimal) * t2.eth_price
       ELSE t1.removed_usd
     END AS removed_usd,
     CASE
-      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt') AND (t1.asset_usd_price = 0) THEN t1.supplied / power(10, decimal)
-      WHEN t1.asset_name in ('ezeth','weth') AND (t1.asset_usd_price = 0) THEN t1.supplied / power(10, decimal) * t2.eth_price
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc') AND (t1.asset_usd_price = 0) THEN t1.supplied / power(10, decimal)
+      WHEN t1.asset_name in ('ezeth','weth','aeth') AND (t1.asset_usd_price = 0) THEN t1.supplied / power(10, decimal) * t2.eth_price
       ELSE t1.supplied_usd
     END AS supplied_usd,
     CASE
-      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt') AND (t1.asset_usd_price = 0) THEN t1.fees_earned / power(10, decimal)
-      WHEN t1.asset_name in ('ezeth','weth') AND (t1.asset_usd_price = 0) THEN t1.fees_earned / power(10, decimal) * t2.eth_price
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc') AND (t1.asset_usd_price = 0) THEN t1.fees_earned / power(10, decimal)
+      WHEN t1.asset_name in ('ezeth','weth','aeth') AND (t1.asset_usd_price = 0) THEN t1.fees_earned / power(10, decimal) * t2.eth_price
       ELSE t1.fee_earned_usd
     END AS fee_earned_usd,
   * EXCEPT (asset_usd_price, balance_usd, locked_usd, removed_usd, supplied_usd, fee_earned_usd)
@@ -52,9 +52,23 @@ price_fix AS (
     ORDER BY xcall_timestamp DESC
     LIMIT 1
   ) t2
+),
+last_bid AS (
+    SELECT 
+    pf.*,
+    rb.last_bid,
+    FORMAT_TIMESTAMP('%Y-%m-%d %H:%M:%S', TIMESTAMP_SECONDS(CAST(rb.last_bid AS INT64))) AS last_bid_time,
+    CASE WHEN TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), TIMESTAMP_SECONDS(CAST(rb.last_bid AS INT64)), HOUR) >= 2 THEN "Inactive" ELSE "Active" END AS Active
+
+    FROM price_fix AS pf 
+    LEFT JOIN {{ ref('router_bids') }} AS rb 
+    ON pf.router_address = rb.router_address 
+    AND 
+    pf.adopted = rb.token_address
+    AND pf.asset_domain = rb.destination_domain
 )
 
-SELECT * FROM price_fix
+SELECT * FROM last_bid ORDER BY balance_usd DESC
 
 --WHERE `asset_usd_price` = 0 AND balance > 0 --AND tm.`asset_name` = 'weth'
 --WHERE tm.`asset_name` is NULL
