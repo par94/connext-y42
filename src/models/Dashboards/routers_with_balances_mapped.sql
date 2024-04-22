@@ -65,7 +65,7 @@ last_bid AS (
     ON pf.router_address = rb.router_address 
     AND 
     pf.adopted = rb.token_address
-    AND pf.asset_domain = rb.destination_domain
+    AND pf.asset_domain = rb.origin_domain
 )
 
 SELECT * FROM last_bid ORDER BY balance_usd DESC
