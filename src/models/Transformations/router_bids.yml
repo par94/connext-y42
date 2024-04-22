@@ -12,3 +12,12 @@ models:
       tags:
         - liquidity
         - dashboard
+    columns:
+      - name: router_address
+        data_type: STRING
+      - name: destination_domain
+        data_type: STRING
+      - name: token_address
+        data_type: STRING
+      - name: last_bid
+        data_type: STRING
