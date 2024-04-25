@@ -120,8 +120,8 @@ Mapped AS (
     CAST(t.amount2  AS NUMERIC)/POWER(10, CAST(tm2.asset_decimals AS NUMERIC)) relayer_amount_2
   
   FROM relayerfees t
-  LEFT JOIN  `y42_connext_y42_dev.token_mapping` tm ON t.address1 = tm.asset AND t.origin_domain = tm.domain
-  LEFT JOIN  `y42_connext_y42_dev.token_mapping` tm2 ON t.address2 = tm2.asset AND t.origin_domain = tm2.domain
+  LEFT JOIN  {{ ref('token_mapping') }} tm ON t.address1 = tm.asset AND t.origin_domain = tm.domain
+  LEFT JOIN  {{ ref('token_mapping') }} tm2 ON t.address2 = tm2.asset AND t.origin_domain = tm2.domain
 )
 SELECT * FROM Mapped
 
