@@ -73,6 +73,6 @@ SELECT * FROM last_bid ORDER BY balance_usd DESC
 --WHERE `asset_usd_price` = 0 AND balance > 0 --AND tm.`asset_name` = 'weth'
 --WHERE tm.`asset_name` is NULL
 /*
-LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS dm ON rwb.`asset_domain` = dm.`domainid`
-LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS tam ON rwb.`adopted` = tam.`assetid` AND rwb.`asset_domain` = tam.`domainid`
+LEFT JOIN 'github_parser_chains') }} AS dm ON rwb.`asset_domain` = dm.`domainid`
+LEFT JOIN 'github_parser_tokens') }} AS tam ON rwb.`adopted` = tam.`assetid` AND rwb.`asset_domain` = tam.`domainid`
 */

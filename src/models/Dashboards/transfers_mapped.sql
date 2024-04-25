@@ -43,10 +43,10 @@ transfers_mapping AS (
     LEFT JOIN {{ ref('token_mapping') }} AS dm ON t.`destination_transacting_asset` = dm.`asset` AND t.`destination_domain` = dm.`domain`
     LEFT JOIN connext_contracts AS cc ON t.`xcall_caller` = cc.`xcall_caller`
     /*
-    LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS odm ON t.`origin_domain` = odm.`domainid`
-    LEFT JOIN {{ source('github_tokens_parser', 'github_parser_chains') }} AS ddm ON t.`destination_domain` = ddm.`domainid`
-    LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS otam ON t.`origin_transacting_asset` = otam.`assetid` AND t.`origin_domain` = otam.`domainid`
-    LEFT JOIN {{ source('github_tokens_parser', 'github_parser_tokens') }} AS dtam ON t.`destination_transacting_asset` = dtam.`assetid`AND t.`destination_domain` = dtam.`domainid`
+    LEFT JOIN 'github_parser_chains') }} AS odm ON t.`origin_domain` = odm.`domainid`
+    LEFT JOIN 'github_parser_chains') }} AS ddm ON t.`destination_domain` = ddm.`domainid`
+    LEFT JOIN 'github_parser_tokens') }} AS otam ON t.`origin_transacting_asset` = otam.`assetid` AND t.`origin_domain` = otam.`domainid`
+    LEFT JOIN 'github_parser_tokens') }} AS dtam ON t.`destination_transacting_asset` = dtam.`assetid`AND t.`destination_domain` = dtam.`domainid`
     LEFT JOIN connext_tokens AS cc_origin ON t.origin_transacting_asset = cc_origin.token_address
     LEFT JOIN connext_tokens AS cc_destination ON t.destination_transacting_asset = cc_destination.token_address
     */
@@ -65,13 +65,26 @@ transfers_amounts AS (
 ezeth_price_fix AS (
   SELECT * EXCEPT(asset_usd_price, usd_amount),
     CASE
-      WHEN (t1.origin_asset_name in ('ezeth','weth') or t1.destination_asset_name in ('ezeth','weth')) AND t1.asset_usd_price = 0 THEN t2.eth_price
+      WHEN (
+        (t1.origin_asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc')) OR 
+        (t1.destination_asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc'))
+        ) 
+      AND (t1.asset_usd_price = 0) 
+        THEN 1
+      WHEN (t1.origin_asset_name in ('ezeth','weth','aeth') or t1.destination_asset_name in ('ezeth','weth','aeth')) AND t1.asset_usd_price = 0 
+        THEN t2.eth_price
       ELSE t1.asset_usd_price
     END AS asset_usd_price,
     CASE
-      WHEN (t1.origin_asset_name in ('ezeth','weth') or t1.destination_asset_name in ('ezeth','weth')) AND t1.asset_usd_price = 0
+      WHEN (
+        (t1.origin_asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc')) OR 
+        (t1.destination_asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc'))
+        ) 
+      AND (t1.asset_usd_price = 0) 
+        THEN destination_amount
+      WHEN (t1.origin_asset_name in ('ezeth','weth','aeth') or t1.destination_asset_name in ('ezeth','weth','aeth')) AND t1.asset_usd_price = 0
       --t1.asset = 'ezeth' OR (t1.asset = 'weth' AND (t1.asset_price = 0)) 
-      THEN t2.eth_price * destination_amount
+        THEN t2.eth_price * destination_amount
       ELSE t1.usd_amount
     END AS usd_amount,
   FROM transfers_amounts t1
