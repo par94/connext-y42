@@ -153,13 +153,13 @@ domain_name_fix AS (
         WHEN destination_domain_name = '1650553709' THEN 'Base Mainnet'
         WHEN destination_domain_name = '1836016741'THEN 'Mode Mainnet'
         ELSE destination_domain_name
-      END AS destination_domain_name
+      END AS destination_domain_name,
     t.* EXCEPT (destination_domain_name)
 
-    FROM router_mapping t
+    FROM router_mapping AS t
 )
 
-SELECT * FROM router_mapping
+SELECT * FROM domain_name_fix
 
 --ttt AS (select * from ezeth_price_fix)
 
