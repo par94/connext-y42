@@ -9,7 +9,7 @@ SELECT
     AVG(tf.asset_usd_price) AS avg_price,
     SUM(tf.usd_amount) AS usd_volume,
     ROW_NUMBER() OVER () AS id
-FROM {{ ref('transfers_with_price_ttr_ttv_y42_dedup') }} AS tf
+FROM {{ ref('transfers_mapped') }} AS tf
 GROUP BY
     tf.status,
     DATE_TRUNC(CAST(TIMESTAMP_SECONDS(tf.xcall_timestamp) AS DATE), DAY),
