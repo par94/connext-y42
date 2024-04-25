@@ -19,7 +19,7 @@ CASE
         WHEN routers = '{0x32d63da9f776891843c90787cec54ada23abd4c2}' THEN 'Ingag'
         WHEN routers = '{0xfaab88015477493cfaa5dfaa533099c590876f21}' THEN 'Paradox'
     END AS router_name 
-  FROM {{ source('Mapping', 'routers') }}
+  
   */
 WITH VolumeMetrics AS (
   SELECT
