@@ -1,3 +1,4 @@
+/*
 SELECT 
 tm.*,
 rm.asset_usd_price as router_asset_usd_price,
@@ -10,3 +11,5 @@ AND LOWER(
   REPLACE((SELECT ARRAY_AGG(unnested_value LIMIT 1)[OFFSET(0)]
    FROM UNNEST(JSON_EXTRACT_ARRAY(tm.`routers`)) AS unnested_value), '"', '')
 ) = LOWER(rm.`address`)
+*/
+SELECT * FROM {{ ref('transfers_mapped') }}
