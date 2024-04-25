@@ -14,7 +14,7 @@ def github_parser_chains(context) -> pd.DataFrame:
     # Reference secrets if needed
     all_secrets = context.secrets.all() # get all secrets saved within this space
 
-    url = "https://github.com/connext/chaindata/blob/main/crossChain.json"
+    url = "https://raw.githubusercontent.com/connext/chaindata/edfe887235b6206aaf59e0f751bd5035506eecf9/crossChain.json"
 
     response = requests.get(url)
     logging.info(response)
@@ -22,7 +22,8 @@ def github_parser_chains(context) -> pd.DataFrame:
     logging.info(response.content)
 
     data = json.loads(response.content)
-    #logging.info(data)
+    logging.info(data)
+    """
     data_clean = data['payload']['blob']['rawLines']
     combined_json_str = "".join(data_clean)
     #logging.info(combined_json_str)
@@ -35,6 +36,8 @@ def github_parser_chains(context) -> pd.DataFrame:
 
     parsed_json = json.loads(combined_json_str)
     data_clean = parsed_json
+    """
+    data_clean = data
     #logging.info(data_clean)
 
     # Return a DataFrame which will be materialized within your data warehouse
@@ -69,11 +72,13 @@ def github_parser_tokens(context) -> pd.DataFrame:
 
 
     # Your code goes here
-    url = "https://github.com/connext/chaindata/blob/main/crossChain.json"
+    url = "https://raw.githubusercontent.com/connext/chaindata/edfe887235b6206aaf59e0f751bd5035506eecf9/crossChain.json"
 
     response = requests.get(url)
     logging.info(response)
     data = json.loads(response.content)
+
+    """
     data_clean = data['payload']['blob']['rawLines']
     combined_json_str = "".join(data_clean)
 
@@ -85,6 +90,8 @@ def github_parser_tokens(context) -> pd.DataFrame:
     # Reconstructing JSON from individual lines
     parsed_json = json.loads(combined_json_str)
     data_clean = parsed_json
+    """
+    data_clean = data
     logging.info(data_clean)
 
     # Return a DataFrame which will be materialized within your data warehouse
