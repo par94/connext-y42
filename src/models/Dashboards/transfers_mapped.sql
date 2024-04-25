@@ -100,11 +100,11 @@ ezeth_price_fix AS (
 relayerfees AS (
   SELECT 
   --(LENGTH(relayer_fees)) AS relayerfees_lenght,
-  REGEXP_EXTRACT(relayer_fees, r'"(0x[a-fA-F0-9]{40})": "\d+"') AS address1,
-  REGEXP_EXTRACT(relayer_fees, r'"0x[a-fA-F0-9]{40}": "(\d+)"') AS amount1,
-  REGEXP_EXTRACT(relayer_fees, r'"(0x[a-fA-F0-9]{40})": "\d+"', 1, 2) AS address2,
-  REGEXP_EXTRACT(relayer_fees, r'"0x[a-fA-F0-9]{40}": "(\d+)"', 1, 2) AS amount2,
-  *
+  t.*,
+  REGEXP_EXTRACT(relayer_fees, r'"(0x[a-fA-F0-9]{40})": "\d+"') AS relayerfee_address1,
+  REGEXP_EXTRACT(relayer_fees, r'"0x[a-fA-F0-9]{40}": "(\d+)"') AS relayerfee_amount1,
+  REGEXP_EXTRACT(relayer_fees, r'"(0x[a-fA-F0-9]{40})": "\d+"', 1, 2) AS relayerfee_address2,
+  REGEXP_EXTRACT(relayer_fees, r'"0x[a-fA-F0-9]{40}": "(\d+)"', 1, 2) AS relayerfee_amount2
   FROM ezeth_price_fix t 
 --ORDER BY (LENGTH(relayer_fees)) desc
 ),
@@ -114,14 +114,14 @@ Mapped AS (
     t.*,
     tm.asset_name as relayer_fee_token_1,
     tm.asset_decimals as relayer_fee_token_1_decimals,
-    CAST(t.amount1 AS NUMERIC)/POWER(10, CAST(tm.asset_decimals AS NUMERIC)) relayer_amount_1,
+    CAST(t.relayerfee_amount1 AS NUMERIC)/POWER(10, CAST(tm.asset_decimals AS NUMERIC)) relayer_amount_1,
     tm2.asset_name as relayer_fee_token_2,
     tm2.asset_decimals as relayer_fee_token_2_decimals,
-    CAST(t.amount2  AS NUMERIC)/POWER(10, CAST(tm2.asset_decimals AS NUMERIC)) relayer_amount_2
+    CAST(t.relayerfee_amount2  AS NUMERIC)/POWER(10, CAST(tm2.asset_decimals AS NUMERIC)) relayer_amount_2
   
   FROM relayerfees t
-  LEFT JOIN  {{ ref('token_mapping') }} tm ON t.address1 = tm.asset AND t.origin_domain = tm.domain
-  LEFT JOIN  {{ ref('token_mapping') }} tm2 ON t.address2 = tm2.asset AND t.origin_domain = tm2.domain
+  LEFT JOIN  {{ ref('token_mapping') }} tm ON t.relayerfee_address1 = tm.asset AND t.origin_domain = tm.domain
+  LEFT JOIN  {{ ref('token_mapping') }} tm2 ON t.relayerfee_address2 = tm2.asset AND t.origin_domain = tm2.domain
 )
 SELECT * FROM Mapped
 
