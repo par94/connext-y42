@@ -137,6 +137,26 @@ router_mapping AS (
     COALESCE(rm.`name`, t.`router`)  AS router_name
   FROM router_regexp AS t
   LEFT JOIN {{ source('bq_raw', 'raw_dim_connext_routers_name') }} AS rm ON LOWER(t.`router`) = LOWER(rm.`router`)
+),
+
+domain_name_fix AS (
+    SELECT 
+      CASE
+        WHEN destination_domain_name = '6648936' THEN 'Ethereum Mainnet'
+        WHEN destination_domain_name = '1869640809' THEN 'Optimistic Ethereum'
+        WHEN destination_domain_name = '6450786' THEN 'Binance Smart Chain Mainnet'
+        WHEN destination_domain_name = '6778479' THEN 'xDAI Chain'
+        WHEN destination_domain_name = '1886350457' THEN 'Matic Mainnet'
+        WHEN destination_domain_name = '1634886255' THEN 'Arbitrum One'
+        WHEN destination_domain_name = '1818848877' THEN 'Linea Mainnet'
+        WHEN destination_domain_name = '1835365481' THEN 'Metis Andromeda Mainnet'
+        WHEN destination_domain_name = '1650553709' THEN 'Base Mainnet'
+        WHEN destination_domain_name = '1836016741'THEN 'Mode Mainnet'
+        ELSE destination_domain_name
+      END AS destination_domain_name
+    t.* EXCEPT (destination_domain_name)
+
+    FROM router_mapping t
 )
 
 SELECT * FROM router_mapping
