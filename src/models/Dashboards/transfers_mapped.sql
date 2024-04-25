@@ -66,8 +66,8 @@ ezeth_price_fix AS (
   SELECT * EXCEPT(asset_usd_price, usd_amount),
     CASE
       WHEN (
-        (t1.origin_asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc')) OR 
-        (t1.destination_asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc'))
+        (t1.origin_asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc','m.usdc')) OR 
+        (t1.destination_asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc','m.usdc'))
         ) 
       AND (t1.asset_usd_price = 0) 
         THEN 1
@@ -77,8 +77,8 @@ ezeth_price_fix AS (
     END AS asset_usd_price,
     CASE
       WHEN (
-        (t1.origin_asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc')) OR 
-        (t1.destination_asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc'))
+        (t1.origin_asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc','m.usdc')) OR 
+        (t1.destination_asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc','m.usdc'))
         ) 
       AND (t1.asset_usd_price = 0) 
         THEN destination_amount

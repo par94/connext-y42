@@ -14,32 +14,32 @@ LEFT JOIN {{ source('bq_raw', 'raw_dim_connext_routers_name') }} AS rm ON LOWER(
 price_fix AS (
   SELECT 
   CASE
-      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc') AND (t1.asset_usd_price = 0) THEN 1
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc','m.usdc') AND (t1.asset_usd_price = 0) THEN 1
       WHEN t1.asset_name in ('ezeth','weth','aeth') AND (t1.asset_usd_price = 0) THEN t2.eth_price
       ELSE t1.asset_usd_price
     END AS asset_usd_price,
     CASE
-      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc') AND (t1.asset_usd_price = 0) THEN t1.balance / power(10, decimal)
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc','m.usdc') AND (t1.asset_usd_price = 0) THEN t1.balance / power(10, decimal)
       WHEN t1.asset_name in ('ezeth','weth','aeth') AND (t1.asset_usd_price = 0) THEN t1.balance / power(10, decimal) * t2.eth_price
       ELSE t1.balance_usd
     END AS balance_usd,
     CASE
-      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc') AND (t1.asset_usd_price = 0) THEN t1.locked / power(10, decimal)
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc','m.usdc') AND (t1.asset_usd_price = 0) THEN t1.locked / power(10, decimal)
       WHEN t1.asset_name in ('ezeth','weth','aeth') AND (t1.asset_usd_price = 0) THEN t1.locked / power(10, decimal) * t2.eth_price
       ELSE t1.locked_usd
     END AS locked_usd,
     CASE
-      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc') AND (t1.asset_usd_price = 0) THEN t1.removed / power(10, decimal)
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc','m.usdc') AND (t1.asset_usd_price = 0) THEN t1.removed / power(10, decimal)
       WHEN t1.asset_name in ('ezeth','weth','aeth') AND (t1.asset_usd_price = 0) THEN t1.removed / power(10, decimal) * t2.eth_price
       ELSE t1.removed_usd
     END AS removed_usd,
     CASE
-      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc') AND (t1.asset_usd_price = 0) THEN t1.supplied / power(10, decimal)
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc','m.usdc') AND (t1.asset_usd_price = 0) THEN t1.supplied / power(10, decimal)
       WHEN t1.asset_name in ('ezeth','weth','aeth') AND (t1.asset_usd_price = 0) THEN t1.supplied / power(10, decimal) * t2.eth_price
       ELSE t1.supplied_usd
     END AS supplied_usd,
     CASE
-      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc') AND (t1.asset_usd_price = 0) THEN t1.fees_earned / power(10, decimal)
+      WHEN t1.asset_name in ('dai','xdai','usdt','wxdai','m.usdt','usdc','m.usdc') AND (t1.asset_usd_price = 0) THEN t1.fees_earned / power(10, decimal)
       WHEN t1.asset_name in ('ezeth','weth','aeth') AND (t1.asset_usd_price = 0) THEN t1.fees_earned / power(10, decimal) * t2.eth_price
       ELSE t1.fee_earned_usd
     END AS fee_earned_usd,
