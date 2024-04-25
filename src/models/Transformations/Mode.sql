@@ -62,7 +62,7 @@ Combined_metrics AS (
     dv.Routers as routers,
     SPLIT(TRIM(REGEXP_REPLACE(dv.routers, r'^\[|"]', ''), '[]"')) AS router_array,
     dv.Origin_Bridged_Asset as asset,
-    dv.Destination_Domain as domain,
+    dv.Destination_Domain as dest_domain,
     usd_volume_1d,
     usd_volume_7d,
     usd_volume_30d,
@@ -85,7 +85,7 @@ Router_metrics AS (
     FULL JOIN (SELECT * FROM {{ source('Cartographer', 'public_routers_with_balances') }} rwb WHERE rwb.domain = '1836016741') rwb
     ON router = rwb.router_address
     AND cm.asset = rwb.adopted
-    AND cm.domain = rwb.domain
+    AND cm.dest_domain = rwb.domain
 )
 SELECT * FROM Router_metrics
 
