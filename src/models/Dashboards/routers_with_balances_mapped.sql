@@ -54,21 +54,47 @@ price_fix AS (
   ) t2
 ),
 last_bid AS (
-    SELECT 
+  SELECT 
     pf.*,
-    rb.last_bid,
-    FORMAT_TIMESTAMP('%Y-%m-%d %H:%M:%S', TIMESTAMP_SECONDS(CAST(rb.last_bid AS INT64))) AS last_bid_time,
-    CASE WHEN TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), TIMESTAMP_SECONDS(CAST(rb.last_bid AS INT64)), HOUR) >= 2 THEN "Inactive" ELSE "Active" END AS Active
-
-    FROM price_fix AS pf 
+    COALESCE(rb.last_bid, '0') AS last_bid
+  FROM 
+    price_fix AS pf 
     LEFT JOIN {{ ref('router_bids') }} AS rb 
-    ON pf.router_address = rb.router_address 
-    AND 
-    pf.adopted = rb.token_address
-    AND pf.asset_domain = rb.router_domain
+      ON pf.router_address = rb.router_address 
+      AND pf.adopted = rb.token_address
+      AND pf.asset_domain = rb.router_domain
+),
+last_transfer AS (
+  SELECT
+    router,
+    destination_domain,
+    destination_transacting_asset,
+    MAX(xcall_timestamp) AS last_transfer
+  FROM {{ ref('transfers_mapped') }}
+  GROUP BY 1,2,3
+),
+last_tx AS (
+  SELECT
+    lb.*,
+    lt.last_transfer,
+    GREATEST(lt.last_transfer, CAST(lb.last_bid AS INT64)) AS last_active
+  FROM last_bid AS lb
+  LEFT JOIN last_transfer AS lt 
+    ON lb.router_address = lt.router
+      AND lb.adopted = lt.destination_transacting_asset
+      AND lb.asset_domain = lt.destination_domain
+),
+router_uptime AS (
+  SELECT
+    FORMAT_TIMESTAMP('%Y-%m-%d %H:%M:%S', TIMESTAMP_SECONDS(last_active)) AS last_active_time,
+ --   CURRENT_TIMESTAMP(),
+    CASE WHEN TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), TIMESTAMP_SECONDS(last_active), HOUR) <= 4 THEN "Active" ELSE "Inactive" END AS Active,
+ --   router_name,
+    t.*
+    
+  FROM last_tx AS t
 )
-
-SELECT * FROM last_bid ORDER BY balance_usd DESC
+SELECT * FROM router_uptime ORDER BY balance_usd DESC
 
 --WHERE `asset_usd_price` = 0 AND balance > 0 --AND tm.`asset_name` = 'weth'
 --WHERE tm.`asset_name` is NULL
