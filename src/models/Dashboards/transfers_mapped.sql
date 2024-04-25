@@ -109,7 +109,7 @@ relayerfees AS (
 --ORDER BY (LENGTH(relayer_fees)) desc
 ),
 
-Mapped AS (
+rf AS (
   SELECT 
     t.*,
     tm.asset_name as relayer_fee_token_1,
@@ -122,8 +122,24 @@ Mapped AS (
   FROM relayerfees t
   LEFT JOIN  {{ ref('token_mapping') }} tm ON t.relayerfee_address1 = tm.asset AND t.origin_domain = tm.domain
   LEFT JOIN  {{ ref('token_mapping') }} tm2 ON t.relayerfee_address2 = tm2.asset AND t.origin_domain = tm2.domain
+),
+
+router_regexp AS (
+  SELECT
+    t.*,
+    REGEXP_REPLACE(t.routers, r'[\[\]\"]', '') AS router
+  FROM rf t
+),
+
+router_mapping AS (
+  SELECT
+    t.*,
+    COALESCE(rm.`name`, t.`router`)  AS router_name
+  FROM router_regexp AS t
+  LEFT JOIN {{ source('bq_raw', 'raw_dim_connext_routers_name') }} AS rm ON LOWER(t.`router`) = LOWER(rm.`router`)
 )
-SELECT * FROM Mapped
+
+SELECT * FROM router_mapping
 
 --ttt AS (select * from ezeth_price_fix)
 
